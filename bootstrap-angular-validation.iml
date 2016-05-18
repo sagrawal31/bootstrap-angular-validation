@@ -10,5 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="bootstrap-angular-validation node_modules" level="project" />
+    <orderEntry type="library" name="angular.min" level="project" />
   </component>
 </module>
