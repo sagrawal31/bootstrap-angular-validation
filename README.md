@@ -1,3 +1,5 @@
+![form validation](https://cloud.githubusercontent.com/assets/1804514/15356658/aee052a2-1d17-11e6-9368-48a2f2b560bb.jpg)
+
 # Bootstrap Angular Validation (No jQuery)
 
 **Inspired by Bootstrap + jQuery form validation**
