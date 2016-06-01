@@ -90,7 +90,7 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
                  * $error = {
                  *     required: true,  // When field is marked as required but not entered.
                  *     minlength: true,
-                 *     number: false
+                 *     number: true
                  * }
                  */
                 var allErrorKeys = Object.keys(ngModelController.$error);

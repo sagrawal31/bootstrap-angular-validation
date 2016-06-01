@@ -5,7 +5,7 @@
  * @name BsValidationService
  * @description Core service of this module to provide various default validations.
  */
-angular.module("bootstrap.angular.validation").factory("BsValidationService", function() {
+angular.module("bootstrap.angular.validation").factory("BsValidationService", function () {
     var messages = {
         required: "This field is required.",
         email: "Please enter a valid email address.",
@@ -25,42 +25,30 @@ angular.module("bootstrap.angular.validation").factory("BsValidationService", fu
     var ngIncludedURLs = [];
 
     var genericValidators = {
-        digits: {
-            validator: function(value) {
-                return (/^\d+$/).test(value);
-            }
+        digits: function (value) {
+            return (/^\d+$/).test(value);
         },
-        equalTo: {
-            validator: function(value, $scope, attr) {
-                return value === $scope.$eval(attr.equalTo);
-            }
+        equalTo: function (value, $scope, attr) {
+            return value === $scope.$eval(attr.equalTo);
         },
-        number: {
-            validator: function(value) {
-                return (/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/).test(value);
-            }
+        number: function (value) {
+            return (/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/).test(value);
         },
-        min: {
-            validator: function(value, $scope, attr) {
-                return parseFloat(value) >= parseFloat(attr.min);
-            }
+        min: function (value, $scope, attr) {
+            return parseFloat(value) >= parseFloat(attr.min);
         },
-        max: {
-            validator: function(value, $scope, attr) {
-                return parseFloat(value) <= parseFloat(attr.max);
-            }
+        max: function (value, $scope, attr) {
+            return parseFloat(value) <= parseFloat(attr.max);
         },
-        length: {
-            validator: function(value, $scope, attr) {
-                return value.length === parseInt(attr.length);
-            }
+        length: function (value, $scope, attr) {
+            return value.length === parseInt(attr.length);
         }
     };
 
     var selectors = [];
     var elements = ["input", "select", "textarea"];
 
-    angular.forEach(elements, function(element) {
+    angular.forEach(elements, function (element) {
         selectors.push(element + "[ng-model]");
         selectors.push(element + "[data-ng-model]");
     });
@@ -73,23 +61,23 @@ angular.module("bootstrap.angular.validation").factory("BsValidationService", fu
          * need not a add it for every form element.
          * @param $element
          */
-        addDirective: function($element) {
+        addDirective: function ($element) {
             var validateableElements = $element.findAll(selector);
             validateableElements.attr("bs-validation", "");
             return validateableElements;
         },
-        addToNgIncludedURLs: function(url) {
+        addToNgIncludedURLs: function (url) {
             if (ngIncludedURLs.indexOf(url) === -1) {
                 ngIncludedURLs.push(url);
             }
         },
-        addValidator: function($scope, $attr, ngModelController, validatorKey) {
+        addValidator: function ($scope, $attr, ngModelController, validatorKey) {
             ngModelController.$validators[validatorKey] = function (modelValue, viewValue) {
                 var value = modelValue || viewValue;
-                return ngModelController.$isEmpty(value) || genericValidators[validatorKey].validator(value, $scope, $attr);
+                return ngModelController.$isEmpty(value) || genericValidators[validatorKey](value, $scope, $attr);
             };
         },
-        checkNgIncludedURL: function(url) {
+        checkNgIncludedURL: function (url) {
             var index = ngIncludedURLs.indexOf(url);
             if (index > -1) {
                 ngIncludedURLs.splice(index, 1);
@@ -98,7 +86,7 @@ angular.module("bootstrap.angular.validation").factory("BsValidationService", fu
 
             return false;
         },
-        getDefaultMessage: function(key) {
+        getDefaultMessage: function (key) {
             return messages[key];
         }
     };
