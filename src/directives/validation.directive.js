@@ -26,8 +26,11 @@
 angular.module("bootstrap.angular.validation").directive("bsValidation", ["$interpolate", "BsValidationService", function($interpolate, bsValidationService) {
     return {
         restrict: "A",
-        require: "ngModel",
-        link: function($scope, $element, $attr, ngModelController) {
+        require: ["ngModel", "^^form"],
+        link: function($scope, $element, $attr, controllers) {
+            var ngModelController = controllers[0];
+            var ngFormController = controllers[1];
+
             var errorElementClass = "bs-invalid-msg";
             // All classed needed to add to validation message
             var errorClasses = [errorElementClass, "help-block"];
@@ -74,7 +77,7 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
                  * Do not show or hide error for current element don't have any validation errors or has validation
                  * error but user has not attempted to submit the form yet.
                  */
-                if (!$scope.formSubmissionAttempted || !ngModelController.$invalid) {
+                if (!ngFormController.$submitted || !ngModelController.$invalid || ngModelController.$pristine) {
                     formGroupElement.removeClass("has-error");
 
                     if (formGroupElement.length > 0) {
@@ -133,7 +136,7 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
 
             // Look when user try to submit the form & display validation errors.
             $scope.$watchCollection(function() {
-                return $scope.formSubmissionAttempted && ngModelController.$error;
+                return ngFormController.$submitted && ngModelController.$error;
             }, displayOrHideError);
         }
     };

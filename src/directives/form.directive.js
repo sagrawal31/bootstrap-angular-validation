@@ -51,21 +51,11 @@ angular.module("bootstrap.angular.validation").directive("form", ["$parse", "$ro
             var preLinkFunction = function($scope, formElement, $attr, formController) {
                 // Expose a method to manually trigger the validation
                 formController.$validate = function() {
-                    $scope.formSubmissionAttempted = true;
+                    formController.$setSubmitted();
                 };
 
                 formElement.on("submit", function(e) {
-                    $scope.$apply(function() {
-                        /*
-                         * Notify all "bs-validation" directive that user has tried submitting the form, now we can
-                         * display validation error messages (if any). This is required, since if we immediately
-                         * starts displaying the validation error messages as the form displayed or as the user starts
-                         * typing, that will not a good user experience.
-                         */
-                        $scope.formSubmissionAttempted = true;
-                    });
-
-                    // If any of the form element does not pass the validation
+                    // If any of the form element has not passed the validation
                     if (formController.$invalid) {
                         // Then focus the first invalid element
                         formElement[0].querySelector(".ng-invalid").focus();
@@ -76,7 +66,7 @@ angular.module("bootstrap.angular.validation").directive("form", ["$parse", "$ro
                     var submitHandler = $parse(ngSubmit);
                     $scope.$apply(function() {
                         submitHandler($scope, {$event: e});
-                        $scope.formSubmissionAttempted = false;
+                        formController.$setPristine();
                     });
 
                     return true;
