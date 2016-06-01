@@ -86,7 +86,7 @@ angular.module("bootstrap.angular.validation").factory("BsValidationService", fu
         addValidator: function($scope, $attr, ngModelController, validatorKey) {
             ngModelController.$validators[validatorKey] = function (modelValue, viewValue) {
                 var value = modelValue || viewValue;
-                return ngModelController.$isEmpty(value) || genericValidators[validatorKey].validator(value, $scope, $attr, ngModelController);
+                return ngModelController.$isEmpty(value) || genericValidators[validatorKey].validator(value, $scope, $attr);
             };
         },
         checkNgIncludedURL: function(url) {

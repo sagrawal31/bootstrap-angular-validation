@@ -28,9 +28,9 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
         restrict: "A",
         require: "ngModel",
         link: function($scope, $element, $attr, ngModelController) {
+            var errorElementClass = "bs-invalid-msg";
             // All classed needed to add to validation message
-            var errorClasses = ["validation-error", "help-block"];
-            var searchableClasses = errorClasses.join(",");
+            var errorClasses = [errorElementClass, "help-block"];
             var markupClasses = errorClasses.join(" ");
 
             // Search parent element with class form-group to operate on.
@@ -46,7 +46,13 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
              * with the validation key and then fallback to use the default message.
              */
             function resolveMessage(element, key) {
+                /*
+                 * First search if the input element has a custom message for a particular validation key. For example:
+                 * Check if "title-required" attribute is present on the element to display the validation error message
+                 * when the field is required.
+                 */
                 var message = element.attr("title-" + key);
+
                 if (!message) {
                     message = bsValidationService.getDefaultMessage(key);
 
@@ -65,7 +71,7 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
              */
             function displayOrHideError() {
                 /*
-                 * Do not show or hide error for current element don"t have any validation errors or has validation
+                 * Do not show or hide error for current element don't have any validation errors or has validation
                  * error but user has not attempted to submit the form yet.
                  */
                 if (!$scope.formSubmissionAttempted || !ngModelController.$invalid) {
@@ -77,11 +83,9 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
                     return false;
                 }
 
-                var oneErrorDisplayed = false;
-
                 /**
-                 * Iterate through each error for the current element & display only the first error.
-                 * For multiple validation, this $error object will be like this:
+                 * Display the first error for the current element. For multiple validations, this $error object will
+                 * be like this:
                  *
                  * $error = {
                  *     required: true,  // When field is marked as required but not entered.
@@ -89,35 +93,33 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
                  *     number: false
                  * }
                  */
-                angular.forEach(ngModelController.$error, function(value, key) {
-                    if (value && !oneErrorDisplayed) {
-                        // Add bootstrap error class
-                        formGroupElement.addClass("has-error");
+                var allErrorKeys = Object.keys(ngModelController.$error);
+                var firstErrorKey = allErrorKeys[0];
 
-                        var message = resolveMessage($element, key);
-                        // Find if the parent class already have error message container.
-                        var errorElement = formGroupElement.findOne("span." + searchableClasses);
-                        var iconMarkup = "<i class=\"fa fa-exclamation-triangle fa-fw\"></i>";
+                // Add bootstrap error class
+                formGroupElement.addClass("has-error");
 
-                        // If not, then append an error container
-                        if (errorElement.length === 0) {
-                            var insertAfter = $element;
-                            // Check if the container have any Bootstrap input group then append the error after it
-                            var groupElement = formGroupElement.findOne(".input-group");
-                            if (groupElement.length > 0) {
-                                insertAfter = groupElement;
-                            }
-                            var errorMarkup = "<span class=\"" + markupClasses + "\">" + iconMarkup + message + "</span>";
-                            insertAfter.after(errorMarkup);
-                        } else {
-                            // Else change the message.
-                            errorElement.html(iconMarkup + message).removeClass("ng-hide");
-                        }
+                var message = resolveMessage($element, firstErrorKey);
 
-                        // Mark that, first error is displayed. TODO Can use a much cleaner solution.
-                        oneErrorDisplayed = true;
+                // Find if the parent class already have error message container
+                var errorElement = formGroupElement.findOne("." + errorElementClass);
+                var iconMarkup = "<i class=\"fa fa-exclamation-triangle fa-fw\"></i>";
+
+                // If not, then append an error container
+                if (errorElement.length === 0) {
+                    var insertAfter = $element;
+                    // Check if the container have any Bootstrap input group then append the error after it
+                    var groupElement = formGroupElement.findOne(".input-group");
+                    if (groupElement.length > 0) {
+                        insertAfter = groupElement;
                     }
-                });
+
+                    var errorMarkup = "<span class=\"" + markupClasses + "\">" + iconMarkup + message + "</span>";
+                    insertAfter.after(errorMarkup);
+                } else {
+                    // Else change the message.
+                    errorElement.html(iconMarkup + message).removeClass("ng-hide");
+                }
             }
 
             var validators = ["equalTo", "min", "max", "number", "digits", "length"];
