@@ -12,6 +12,11 @@ This library solves the pain of various [Bootstrap](getbootstrap.com) + AngularJ
 [jQuery like validation](https://jqueryvalidation.org/documentation/)(of course without the jQuery) and using the
 Bootstrap's [form validation classes](http://getbootstrap.com/css/#forms-control-validation).
 
+## Compatibility
+
+Minimum AngularJS version required: **1.3.0**. If you are using an older version of AngularJS, please use the version
+`0.0.1` of this library but that have some known bugs which are fixed in newer versions.
+
 ## Features
 
 **A few things to look out for when playing around**

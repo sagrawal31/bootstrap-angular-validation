@@ -54,23 +54,8 @@ angular.module("bootstrap.angular.validation").factory("BsValidationService", fu
             validator: function(value, $scope, attr) {
                 return value.length === parseInt(attr.length);
             }
-        },
-        minlength: {
-            validator: function(value, $scope, attr) {
-                return value.length >= parseInt(attr.minlength);
-            }
-        },
-        maxlength: {
-            validator: function(value, $scope, attr) {
-                return value.length <= parseInt(attr.maxlength);
-            }
         }
     };
-
-    function setValidity(key, value, $scope, attr, ngModelController) {
-        var isValid = ngModelController.$isEmpty(value) || genericValidators[key].validator(value, $scope, attr, ngModelController);
-        ngModelController.$setValidity(key, isValid);
-    }
 
     var selectors = [];
     var elements = ["input", "select", "textarea"];
@@ -99,12 +84,10 @@ angular.module("bootstrap.angular.validation").factory("BsValidationService", fu
             }
         },
         addValidator: function($scope, $attr, ngModelController, validatorKey) {
-            var validator = function(value) {
-                setValidity(validatorKey, value, $scope, $attr, ngModelController);
-                return value;
+            ngModelController.$validators[validatorKey] = function (modelValue, viewValue) {
+                var value = modelValue || viewValue;
+                return ngModelController.$isEmpty(value) || genericValidators[validatorKey].validator(value, $scope, $attr, ngModelController);
             };
-
-            ngModelController.$parsers.push(validator);
         },
         checkNgIncludedURL: function(url) {
             var index = ngIncludedURLs.indexOf(url);
@@ -117,9 +100,6 @@ angular.module("bootstrap.angular.validation").factory("BsValidationService", fu
         },
         getDefaultMessage: function(key) {
             return messages[key];
-        },
-        setValidity: function(key, value, $scope, attr, ctrl) {
-            setValidity(key, value, $scope, attr, ctrl);
         }
     };
 });

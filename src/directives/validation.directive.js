@@ -120,7 +120,7 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
                 });
             }
 
-            var validators = ["equalTo", "minlength", "maxlength", "min", "max", "number", "digits", "length"];
+            var validators = ["equalTo", "min", "max", "number", "digits", "length"];
             // Register generic custom validators if added to element
             angular.forEach(validators, function(key) {
                 var attrValue = $element.attr(key);
