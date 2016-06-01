@@ -39,9 +39,9 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
             // Search parent element with class form-group to operate on.
             var formGroupElement = $element.parents(".form-group");
 
-            // Search for an attribute "form-group" if the class ".form-group" is not available
+            // Search for an attribute "bs-form-group" if the class ".form-group" is not available
             if (!formGroupElement || formGroupElement.length === 0) {
-                formGroupElement = $element.parents("[form-group]");
+                formGroupElement = $element.parents("[bs-form-group]");
 
                 // If we still don't find any element
                 if (!formGroupElement || formGroupElement.length === 0) {
