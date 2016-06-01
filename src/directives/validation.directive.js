@@ -42,6 +42,12 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
             // Search for an attribute "form-group" if the class ".form-group" is not available
             if (!formGroupElement || formGroupElement.length === 0) {
                 formGroupElement = $element.parents("[form-group]");
+
+                // If we still don't find any element
+                if (!formGroupElement || formGroupElement.length === 0) {
+                    // Then do not execute the directive at all
+                    return;
+                }
             }
 
             /*
