@@ -71,7 +71,7 @@ angular.module("bootstrap.angular.validation").directive("form", ["$parse", "$ro
                          * Do not show validation errors once the form gets submitted. You can still display the
                          * validation errors after form submission by calling "$setSubmitted" in your form controller.
                          */
-                        formController.$setPrisiting();
+                        formController.$setPristine();
                     });
 
                     /**
