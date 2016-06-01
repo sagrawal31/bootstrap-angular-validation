@@ -63,10 +63,6 @@ Make sure CSS for Bootstrap is also included in your application. Read the [docs
 var myApp = angular.module("foo", ["bootstrap.angular.validation", "other-foo-depenency"]);
 ```
 
-### 4. HTML view change
-
-Change all your `ng-submit` to `on-submit` in all your `<form>` tags (Fix for this change coming soon)
-
 ### Now Rock!!
 
 Basic Bootstrap validation has enabled in your forms. No further setup and no alternation required. Try submitting a

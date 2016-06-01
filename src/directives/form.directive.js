@@ -18,7 +18,7 @@ angular.module("bootstrap.angular.validation").directive("form", ["$parse", "$ro
         restrict: "E",
         require: "form",
         priority: 1000,     // Setting a higher priority so that, this directive compiles first.
-        compile: function($formElement) {
+        compile: function($formElement, $formAttributes) {
             // Disable HTML5 validation display
             $formElement.attr("novalidate", "novalidate");
             bsValidationService.addDirective($formElement);
@@ -40,6 +40,13 @@ angular.module("bootstrap.angular.validation").directive("form", ["$parse", "$ro
                  */
                 bsValidationService.addToNgIncludedURLs(src);
             }
+
+            var ngSubmit = $formAttributes.ngSubmit;
+            /*
+             * Removing ngSubmit attribute if any since ngSubmit by default doesn't respects the validation errors
+             * on the input fields.
+             */
+            delete $formAttributes.ngSubmit;
 
             var preLinkFunction = function($scope, formElement, $attr, formController) {
                 // Expose a method to manually trigger the validation
@@ -65,11 +72,8 @@ angular.module("bootstrap.angular.validation").directive("form", ["$parse", "$ro
                         return false;
                     }
 
-                    // Do not show error once the form gets submitted
-                    $scope.formSubmissionAttempted = false;
-
-                    // Parse the handler of on-submit & execute it
-                    var submitHandler = $parse($attr.onSubmit);
+                    // Parse the handler of ng-submit & execute it
+                    var submitHandler = $parse(ngSubmit);
                     $scope.$apply(function() {
                         submitHandler($scope, {$event: e});
                         $scope.formSubmissionAttempted = false;
