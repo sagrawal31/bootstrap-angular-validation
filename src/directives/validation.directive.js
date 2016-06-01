@@ -77,7 +77,7 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
                  * Do not show or hide error for current element don't have any validation errors or has validation
                  * error but user has not attempted to submit the form yet.
                  */
-                if (!ngFormController.$submitted || !ngModelController.$invalid || ngModelController.$pristine) {
+                if (!ngFormController.$submitted || !ngModelController.$invalid) {
                     formGroupElement.removeClass("has-error");
 
                     if (formGroupElement.length > 0) {

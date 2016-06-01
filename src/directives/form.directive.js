@@ -66,10 +66,17 @@ angular.module("bootstrap.angular.validation").directive("form", ["$parse", "$ro
                     var submitHandler = $parse(ngSubmit);
                     $scope.$apply(function() {
                         submitHandler($scope, {$event: e});
-                        formController.$setPristine();
                     });
 
-                    return true;
+                    /**
+                     * Prevent other submit event listener registered via Angular so that we can mark the form with
+                     * the prestine state. Otherwise, that Angular's listener is getting called at the last and is again
+                     * setting form to the submitted.
+                     *
+                     * https://api.jquery.com/event.stopimmediatepropagation/
+                     */
+                    e.stopImmediatePropagation();
+                    return false;
                 });
             };
 
