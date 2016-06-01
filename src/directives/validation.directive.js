@@ -129,14 +129,10 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
                 }
             });
 
-            $scope.$watch($attr.ngModel, function() {
-                displayOrHideError();
-            });
-
             // Look when user try to submit the form & display validation errors.
-            $scope.$watch("formSubmissionAttempted", function() {
-                displayOrHideError();
-            });
+            $scope.$watchCollection(function() {
+                return $scope.formSubmissionAttempted && ngModelController.$error;
+            }, displayOrHideError);
         }
     };
 }]);
