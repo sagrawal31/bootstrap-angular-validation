@@ -36,6 +36,11 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
             // Search parent element with class form-group to operate on.
             var formGroupElement = $element.parents(".form-group");
 
+            // Search for an attribute "form-group" if the class ".form-group" is not available
+            if (!formGroupElement || formGroupElement.length === 0) {
+                formGroupElement = $element.parents("[form-group]");
+            }
+
             /*
              * Used to resolve the message for current validation failure. Will first search the title attribute
              * with the validation key and then fallback to use the default message.
@@ -67,7 +72,7 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
                     formGroupElement.removeClass("has-error");
 
                     if (formGroupElement.length > 0) {
-                        formGroupElement.findAll("span." + errorClasses.join(".")).remove();
+                        formGroupElement.findAll("span." + errorClasses.join(".")).addClass("ng-hide");
                     }
                     return false;
                 }
@@ -106,7 +111,7 @@ angular.module("bootstrap.angular.validation").directive("bsValidation", ["$inte
                             insertAfter.after(errorMarkup);
                         } else {
                             // Else change the message.
-                            errorElement.html(iconMarkup + message);
+                            errorElement.html(iconMarkup + message).removeClass("ng-hide");
                         }
 
                         // Mark that, first error is displayed. TODO Can use a much cleaner solution.

@@ -72,7 +72,15 @@ angular.module("bootstrap.angular.validation").factory("BsValidationService", fu
         ngModelController.$setValidity(key, isValid);
     }
 
-    var selector = "input[ng-model],select[ng-model],textarea[ng-model]";
+    var selectors = [];
+    var elements = ["input", "select", "textarea"];
+
+    angular.forEach(elements, function(element) {
+        selectors.push(element + "[ng-model]");
+        selectors.push(element + "[data-ng-model]");
+    });
+
+    var selector = selectors.join(",");
 
     return {
         /**
