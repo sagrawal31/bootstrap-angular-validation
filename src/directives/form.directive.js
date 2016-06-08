@@ -55,6 +55,8 @@ angular.module("bootstrap.angular.validation").directive("form", ["$parse", "$ro
                 };
 
                 formElement.on("submit", function(e) {
+                    e.preventDefault();
+
                     // If any of the form element has not passed the validation
                     if (formController.$invalid) {
                         // Then focus the first invalid element
@@ -66,6 +68,9 @@ angular.module("bootstrap.angular.validation").directive("form", ["$parse", "$ro
                     var submitHandler = $parse(ngSubmit);
                     $scope.$apply(function() {
                         submitHandler($scope, {$event: e});
+
+                        formController.$commitViewValue();
+                        formController.$setSubmitted();
 
                         /*
                          * Do not show validation errors once the form gets submitted. You can still display the
