@@ -7,7 +7,8 @@
     "angular": "^1.5.5"
   },
   "authors": [
-    "Shashank Agrawal <shagrawal99@gmail.com>"
+    "Shashank Agrawal <shagrawal99@gmail.com>",
+    "Julian Amelung <j.beisenkoetter@gmail.com>"
   ],
   "license": "MIT",
   "ignore": [
