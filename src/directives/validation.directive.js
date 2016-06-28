@@ -70,7 +70,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             }, displayOrHideError);
 
             $scope.$watchCollection(function() {
-              return ngModelController.$valid
+              return ngModelController.$valid;
             }, displayOrHideError);
 
             function resolveMessage(key) {
@@ -118,7 +118,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             function addErrorMessage(){
               var message = resolveMessage(Object.keys(ngModelController.$error)[0]);
               var errorElement = formGroupElement.findOne('.' + errorElementClass);
-              if (errorElement.length === 0) { errorContainer(message) }
+              if (errorElement.length === 0) { errorContainer(message); }
               errorElement.html(iconMarkup + message).removeClass('ng-hide');
             }
 

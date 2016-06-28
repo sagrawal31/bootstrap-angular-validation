@@ -2,4 +2,4 @@
 
 ## 0.0.1
 
-First version of the basic validtion in Angular with Bootstrap like jQuery.
+First version of the basic validation in Angular with Bootstrap like jQuery.
