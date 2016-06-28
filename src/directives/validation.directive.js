@@ -1,3 +1,5 @@
+/* global angular */
+
 'use strict';
 
 /**
@@ -10,10 +12,9 @@
  * Those element must have ng-model attributes. This directive will automatically add the 'has-error' class on the
  * parent element with class '.form-group' and will show/hide the validation message automatically.
 */
-
 angular.module('bootstrap.angular.validation').directive('bsValidation', [
   '$interpolate', 'BsValidationService',
-    function($interpolate, bsValidationService, $log) {
+    function($interpolate, bsValidationService) {
       return {
           restrict: 'A',
           require: ['ngModel', '^^form'],
@@ -24,7 +25,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
 
             // HTML selector helper
             var errorElementClass = 'bs-invalid-msg';
-            var iconMarkup = '<i class=\'fa fa-exclamation-triangle fa-fw\'></i>';
+            var iconMarkup = '<i class="fa fa-exclamation-triangle fa-fw"></i>';
             var formGroup = '.form-group';
             var customFormGroup = '[bs-form-group]';
             var helpBlock = 'help-block';
@@ -48,7 +49,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             }
 
             var metaInformation = {};
-            angular.forEach(bsValidationService.getMeta(), function(key){
+            angular.forEach(bsValidationService.getMeta(), function(key) {
               metaInformation[key] = $element.attr(key);
             });
 
@@ -85,27 +86,27 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               return false;
             }
 
-            function addErrors(){
+            function addErrors() {
               addErrorClass();
               addErrorMessage();
               return false;
             }
 
-            function addSuccessClass(){
+            function addSuccessClass() {
               formGroupElement.addClass('has-success');
               return removeErrors();
             }
 
-            function addErrorClass(){
+            function addErrorClass() {
               formGroupElement.removeClass('has-success');
               formGroupElement.addClass('has-error');
             }
 
-            function renderError(message){
+            function renderError(message) {
               return '<span class="' + markupClasses + '">' + iconMarkup + message + '</span>';
             }
 
-            function errorContainer(message){
+            function errorContainer(message) {
               var insertAfter = $element;
               // Check if the container have any Bootstrap input group then append the error after it
               var groupElement = formGroupElement.findOne('.input-group');
@@ -115,7 +116,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               insertAfter.after(renderError(message));
             }
 
-            function addErrorMessage(){
+            function addErrorMessage() {
               var message = resolveMessage(Object.keys(ngModelController.$error)[0]);
               var errorElement = formGroupElement.findOne('.' + errorElementClass);
               if (errorElement.length === 0) { errorContainer(message); }
@@ -123,9 +124,9 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             }
 
             function displayOrHideError() {
-              if(ngModelController.$valid){ return addSuccessClass(); }
-              if(ngModelController.$untouched){ return removeErrors(); }
-              if(ngModelController.$invalid){ return addErrors(); }
+              if (ngModelController.$valid) { return addSuccessClass(); }
+              if (ngModelController.$untouched) { return removeErrors(); }
+              if (ngModelController.$invalid) { return addErrors(); }
             }
 
           }
