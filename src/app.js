@@ -2,8 +2,11 @@
 
 'use strict';
 
-angular.module('bootstrap.angular.validation', []).config(['$httpProvider', function ($httpProvider) {
+angular.module('bootstrap.angular.validation', []);
+
+angular.module('bootstrap.angular.validation').config(['$httpProvider', function ($httpProvider) {
   var interceptor = ['$rootScope', 'BsValidationService', function ($rootScope, bsValidationService) {
+
     return {
       'response': function (response) {
         /**

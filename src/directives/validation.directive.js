@@ -13,11 +13,12 @@
  * parent element with class '.form-group' and will show/hide the validation message automatically.
 */
 angular.module('bootstrap.angular.validation').directive('bsValidation', [
-  '$interpolate', 'BsValidationService',
-    function($interpolate, bsValidationService) {
+  '$interpolate', '$timeout', 'BsValidationService', 'bsValidationConfig',
+
+    function($interpolate, $timeout, bsValidationService, bsValidationConfig) {
       return {
           restrict: 'A',
-          require: ['ngModel', '^^form'],
+          require: ['ngModel', '?^^form'],
           link: function($scope, $element, $attr, controllers) {
             // initialize controllers
             var ngModelController = controllers[0];
@@ -48,6 +49,11 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               }
             }
 
+            var displayValidationState = false;
+            var shouldValidateOnBlur = bsValidationConfig.shouldValidateOnBlur();
+            var shouldValidateOnDisplay = bsValidationConfig.shouldValidateOnDisplay();
+            var shouldValidateOnSubmit = bsValidationConfig.shouldValidateOnSubmit();
+
             var metaInformation = {};
             angular.forEach(bsValidationService.getMeta(), function(key) {
               metaInformation[key] = $element.attr(key);
@@ -61,19 +67,6 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               }
             });
 
-            // register watchers for submission touch and valid
-            $scope.$watchCollection(function() {
-              return ngFormController.$submitted && ngModelController.$error;
-            }, displayOrHideError);
-
-            $scope.$watchCollection(function() {
-              return ngModelController.$touched;
-            }, displayOrHideError);
-
-            $scope.$watchCollection(function() {
-              return ngModelController.$valid;
-            }, displayOrHideError);
-
             function resolveMessage(key) {
               var message = $element.attr(key + '-notification') || bsValidationService.getDefaultMessage(key);
               var matchers = angular.extend({}, {validValue: $attr[key]}, metaInformation);
@@ -84,6 +77,10 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               formGroupElement.removeClass('has-error');
               if (formGroupElement.length > 0) { formGroupElement.findAll('span.' + errorClasses.join('.')).addClass('ng-hide'); }
               return false;
+            }
+
+            function removeSuccessClass() {
+              formGroupElement.removeClass('has-success');
             }
 
             function addErrors() {
@@ -123,12 +120,51 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               errorElement.html(iconMarkup + message).removeClass('ng-hide');
             }
 
-            function displayOrHideError() {
+            function displayOrHideValidationState() {
+              if (!displayValidationState) {
+                removeSuccessClass();
+                return removeErrors();
+              }
+
               if (ngModelController.$valid) { return addSuccessClass(); }
-              if (ngModelController.$untouched) { return removeErrors(); }
               if (ngModelController.$invalid) { return addErrors(); }
             }
 
+            if (shouldValidateOnDisplay) {
+              displayValidationState = true;
+              ngModelController.$validate();
+
+              $timeout(function() {
+                // TODO Figure out why do we require $timeout here
+                displayOrHideValidationState();
+              });
+            }
+
+            if (shouldValidateOnBlur) {
+              var dewatcher = $scope.$watch(function () {
+                return ngModelController.$touched;
+              }, function(lostFocus) {
+                if (lostFocus) {
+                  displayValidationState = true;
+                  displayOrHideValidationState();
+                  dewatcher();
+                }
+              });
+            }
+
+            if (shouldValidateOnSubmit && ngFormController) {
+              // register watchers for submission touch and valid
+              $scope.$watchCollection(function() {
+                return ngFormController.$submitted;
+              }, function(submitted) {
+                displayValidationState = submitted;
+                displayOrHideValidationState();
+              });
+            }
+
+            ngModelController.$viewChangeListeners.push(function() {
+              displayOrHideValidationState();
+            });
           }
         };
     }

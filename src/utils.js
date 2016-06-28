@@ -1,6 +1,6 @@
 /* global document */
 
-"use strict";
+'use strict';
 
 /**
  * @ngdoc function
