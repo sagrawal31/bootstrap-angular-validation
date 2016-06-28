@@ -12,6 +12,8 @@ This library solves the pain of various [Bootstrap](getbootstrap.com) + AngularJ
 [jQuery like validation](https://jqueryvalidation.org/documentation/)(of course without the jQuery) and using the
 Bootstrap's [form validation classes](http://getbootstrap.com/css/#forms-control-validation).
 
+1. This module uses [ES5](https://github.com/airbnb/javascript/tree/master/es5) style guide.
+
 ## Compatibility
 
 Minimum AngularJS version required: **1.3.0**. If you are using an older version of AngularJS, please use the version
