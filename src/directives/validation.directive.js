@@ -154,7 +154,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
 
             if (shouldValidateOnSubmit && ngFormController) {
               // register watchers for submission touch and valid
-              $scope.$watchCollection(function() {
+              $scope.$watch(function() {
                 return ngFormController.$submitted;
               }, function(submitted) {
                 displayValidationState = submitted;
