@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('bootstrap.angular.validation').factory('simpleMessageService', ['BsValidationService', function(bsValidationService) {
+angular.module('bootstrap.angular.validation').factory('simpleMessageService', ['BsValidationService', function(validationService) {
 
   var errorElementClass = '.bs-invalid-msg';
   var helpBlockClass = '.help-block';
@@ -27,13 +27,13 @@ angular.module('bootstrap.angular.validation').factory('simpleMessageService', [
   }
 
   return {
-    hideErrorMessage: function($formGroupElement) {
-      $formGroupElement.removeClass('has-error');
+    hideErrorMessage: function($element, $formGroupElement) {
+      validationService.removeErrorClass($formGroupElement);
       $formGroupElement.findAll('span.' + errorClasses.join('.')).addClass('ng-hide');
     },
 
     resolveMessage: function($element, $attr, key) {
-      return bsValidationService.resolveMessage($element, $attr, key);
+      return validationService.resolveMessage($element, $attr, key);
     },
 
     showErrorMessage: function($element, $attr, ngModelController, $formGroupElement) {

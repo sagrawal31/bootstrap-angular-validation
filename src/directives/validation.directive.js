@@ -24,14 +24,6 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             var ngModelController = controllers[0];
             var ngFormController = controllers[1];
 
-            // HTML selector helper
-            var errorElementClass = 'bs-invalid-msg';
-
-            var helpBlock = 'help-block';
-
-            // All classed needed to add to validation message
-            var errorClasses = [errorElementClass, helpBlock];
-
             var $formGroupElement = validationService.getFormGroupElement($element);
             if (!$formGroupElement) {
               throw 'No parent form group element found for input element';
@@ -55,7 +47,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             });
 
             function removeErrors() {
-              validationMessageService.hideErrorMessage($formGroupElement);
+              validationMessageService.hideErrorMessage($element, $formGroupElement);
             }
 
             function removeSuccessClass() {

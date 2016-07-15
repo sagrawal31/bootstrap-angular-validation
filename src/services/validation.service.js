@@ -69,7 +69,6 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     /**
      * Search all the input element inside the given DOM element and apply the 'bs-validation' directive so we
      * need not a add it for every form element.
-     * @param $element
      */
     getValidators: function () {
       var builtIn = ['equalto', 'min', 'max', 'number', 'digits', 'length'];
@@ -129,7 +128,13 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       if ($attr[displayErrorAsAttrName]) {
         return $attr[displayErrorAsAttrName];
       } else {
-        var $parentForm = $element.parent('form');
+        var $parentForm = $element.parents('form');
+
+        // .attr() method not accepting camelCase version of the attribute name. Converting it to dashed-case
+        displayErrorAsAttrName = displayErrorAsAttrName.replace(/([A-Z])/g, function($1) {
+          return '-' + $1.toLowerCase();
+        });
+
         if ($parentForm && $parentForm.attr(displayErrorAsAttrName)) {
           return $parentForm.attr(displayErrorAsAttrName);
         }
@@ -173,6 +178,10 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       }
 
       return validationMessageService;
+    },
+
+    removeErrorClass: function($formGroupElement) {
+      $formGroupElement.removeClass('has-error');
     },
 
     resolveMessage: function ($element, $attr, key) {
