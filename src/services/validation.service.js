@@ -5,7 +5,13 @@
  * @name BsValidationService
  * @description Core service of this module to provide various default validations.
  */
-angular.module('bootstrap.angular.validation').factory('BsValidationService', function () {
+angular.module('bootstrap.angular.validation').factory('BsValidationService', ['$interpolate', 'bsValidationConfig',
+'$injector', function($interpolate, bsValidationConfig, $injector) {
+
+  var displayErrorAsAttrName = 'bsDisplayErrorAs';
+  var customFormGroup = '[bs-form-group]';
+  var formGroupClass = '.form-group';
+
   var messages = {
     required: 'This field is required.',
     email: 'Please enter a valid email address.',
@@ -75,10 +81,25 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', fu
       return ['matchName'];
     },
 
+    getMetaInformation: function($element) {
+      var metaInformation = {};
+
+      angular.forEach(this.getMeta(), function(key) {
+        metaInformation[key] = $element.attr(key);
+      });
+
+      return metaInformation;
+    },
+
     addDirective: function ($element) {
       var validateableElements = $element.findAll(selector);
       validateableElements.attr('bs-validation', '');
       return validateableElements;
+    },
+
+    addErrorClass: function($formGroupElement) {
+      $formGroupElement.removeClass('has-success');
+      $formGroupElement.addClass('has-error');
     },
 
     addToNgIncludedURLs: function (url) {
@@ -104,9 +125,63 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', fu
       return false;
     },
 
+    displayErrorPreference: function($element, $attr) {
+      if ($attr[displayErrorAsAttrName]) {
+        return $attr[displayErrorAsAttrName];
+      } else {
+        var $parentForm = $element.parent('form');
+        if ($parentForm && $parentForm.attr(displayErrorAsAttrName)) {
+          return $parentForm.attr(displayErrorAsAttrName);
+        }
+      }
+
+      // Use the global preference
+      return bsValidationConfig.getDisplayErrorsAs();
+    },
+
     getDefaultMessage: function (key) {
       return messages[key];
+    },
+
+    getFormGroupElement: function($element) {
+      // Search parent element with class form-group to operate on.
+      var formGroupElement = $element.parents(formGroupClass);
+
+      // Search for an attribute 'bs-form-group' if the class '.form-group' is not available
+      if (!formGroupElement || formGroupElement.length === 0) {
+        formGroupElement = $element.parents(customFormGroup);
+
+        if (!formGroupElement || formGroupElement.length === 0) {
+          return null;
+        }
+      }
+
+      return formGroupElement;
+    },
+
+    getValidationMessageService: function(displayType) {
+      var validationMessageService;
+
+      try {
+        validationMessageService = $injector.get(displayType + 'MessageService');
+      } catch(e) {
+        throw 'No message service found for type [' + displayType + '].';
+      }
+
+      if (displayType === 'tooltip' && !$injector.has('$uibPosition')) {
+        throw '$uibPosition service required from the ui-bootstrap module in order to use the tooltip message.';
+      }
+
+      return validationMessageService;
+    },
+
+    resolveMessage: function ($element, $attr, key) {
+      var metaInformation = this.getMetaInformation($element);
+      var message = $element.attr(key + '-notification') || this.getDefaultMessage(key);
+
+      var matchers = angular.extend({}, {validValue: $attr[key]}, metaInformation);
+      return $interpolate(message)(matchers);
     }
 
   };
-});
+}]);

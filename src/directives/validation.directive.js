@@ -13,9 +13,9 @@
  * parent element with class '.form-group' and will show/hide the validation message automatically.
 */
 angular.module('bootstrap.angular.validation').directive('bsValidation', [
-  '$interpolate', '$timeout', 'BsValidationService', 'bsValidationConfig',
+  '$interpolate', '$timeout', '$injector', 'BsValidationService', 'bsValidationConfig',
 
-    function($interpolate, $timeout, bsValidationService, bsValidationConfig) {
+    function($interpolate, $timeout, $injector, bsValidationService, bsValidationConfig) {
       return {
           restrict: 'A',
           require: ['ngModel', '?^^form'],
@@ -26,27 +26,15 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
 
             // HTML selector helper
             var errorElementClass = 'bs-invalid-msg';
-            var iconMarkup = '<i class="fa fa-exclamation-triangle fa-fw"></i>';
-            var formGroup = '.form-group';
-            var customFormGroup = '[bs-form-group]';
+
             var helpBlock = 'help-block';
 
             // All classed needed to add to validation message
             var errorClasses = [errorElementClass, helpBlock];
-            var markupClasses = errorClasses.join(' ');
 
-            // Search parent element with class form-group to operate on.
-            var formGroupElement = $element.parents(formGroup);
-
-            // Search for an attribute 'bs-form-group' if the class '.form-group' is not available
-            if (!formGroupElement || formGroupElement.length === 0) {
-              formGroupElement = $element.parents(customFormGroup);
-
-              // If we still don't find any element
-              if (!formGroupElement || formGroupElement.length === 0) {
-                // Then do not execute the directive at all
-                return;
-              }
+            var $formGroupElement = bsValidationService.getFormGroupElement($element);
+            if (!$formGroupElement) {
+              throw 'No parent form group element found for input element';
             }
 
             var displayValidationState = false;
@@ -54,10 +42,9 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             var shouldValidateOnDisplay = bsValidationConfig.shouldValidateOnDisplay();
             var shouldValidateOnSubmit = bsValidationConfig.shouldValidateOnSubmit();
 
-            var metaInformation = {};
-            angular.forEach(bsValidationService.getMeta(), function(key) {
-              metaInformation[key] = $element.attr(key);
-            });
+            var metaInformation = bsValidationService.getMetaInformation($element);
+            var displayErrorAs = bsValidationService.displayErrorPreference($element, $attr);
+            var validationMessageService = bsValidationService.getValidationMessageService(displayErrorAs);
 
             // Register generic custom validators if added to element
             angular.forEach(bsValidationService.getValidators(), function(key) {
@@ -67,63 +54,29 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               }
             });
 
-            function resolveMessage(key) {
-              var message = $element.attr(key + '-notification') || bsValidationService.getDefaultMessage(key);
-              var matchers = angular.extend({}, {validValue: $attr[key]}, metaInformation);
-              return $interpolate(message)(matchers);
-            }
-
             function removeErrors() {
-              formGroupElement.removeClass('has-error');
-              if (formGroupElement.length > 0) { formGroupElement.findAll('span.' + errorClasses.join('.')).addClass('ng-hide'); }
-              return false;
+              validationMessageService.hideErrorMessage($formGroupElement);
             }
 
             function removeSuccessClass() {
-              formGroupElement.removeClass('has-success');
+              $formGroupElement.removeClass('has-success');
             }
 
             function addErrors() {
-              addErrorClass();
-              addErrorMessage();
+              bsValidationService.addErrorClass($formGroupElement);
+              validationMessageService.showErrorMessage($element, $attr, ngModelController, $formGroupElement);
               return false;
             }
 
             function addSuccessClass() {
-              formGroupElement.addClass('has-success');
+              $formGroupElement.addClass('has-success');
               return removeErrors();
-            }
-
-            function addErrorClass() {
-              formGroupElement.removeClass('has-success');
-              formGroupElement.addClass('has-error');
-            }
-
-            function renderError(message) {
-              return '<span class="' + markupClasses + '">' + iconMarkup + message + '</span>';
-            }
-
-            function errorContainer(message) {
-              var insertAfter = $element;
-              // Check if the container have any Bootstrap input group then append the error after it
-              var groupElement = formGroupElement.findOne('.input-group');
-              if (groupElement.length > 0) {
-                  insertAfter = groupElement;
-              }
-              insertAfter.after(renderError(message));
-            }
-
-            function addErrorMessage() {
-              var message = resolveMessage(Object.keys(ngModelController.$error)[0]);
-              var errorElement = formGroupElement.findOne('.' + errorElementClass);
-              if (errorElement.length === 0) { errorContainer(message); }
-              errorElement.html(iconMarkup + message).removeClass('ng-hide');
             }
 
             function displayOrHideValidationState() {
               if (!displayValidationState) {
                 removeSuccessClass();
-                return removeErrors();
+                removeErrors();
               }
 
               if (ngModelController.$valid) { return addSuccessClass(); }

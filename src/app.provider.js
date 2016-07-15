@@ -6,6 +6,8 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
 
   // Can be a string or list of any combination of "blur", "submit" & "display"
   var validateFieldsOn = 'blur';
+  // Display the validation error message below the `input` field with class "help-block"
+  var displayErrorsAs = 'simple';
 
   function shouldValidateOn(event) {
     if (angular.isString(validateFieldsOn)) {
@@ -34,8 +36,20 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
     validateFieldsOn = event;
   };
 
+  _this.setDisplayErrorsAs = function(type) {
+    if (!type) {
+      throw 'Please provide the way validation error should be displayed. In-built options are "simple" & "tooltip".';
+    }
+
+    displayErrorsAs = type;
+  };
+
   _this.$get = [function() {
     return {
+      getDisplayErrorsAs: function() {
+        return displayErrorsAs;
+      },
+
       shouldAddSuccessClass: function() {
         return _this.addSuccessClass;
       },
