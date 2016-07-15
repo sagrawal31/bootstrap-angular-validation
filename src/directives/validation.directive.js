@@ -15,7 +15,7 @@
 angular.module('bootstrap.angular.validation').directive('bsValidation', [
   '$interpolate', '$timeout', '$injector', 'BsValidationService', 'bsValidationConfig',
 
-    function($interpolate, $timeout, $injector, bsValidationService, bsValidationConfig) {
+    function($interpolate, $timeout, $injector, validationService, validationConfig) {
       return {
           restrict: 'A',
           require: ['ngModel', '?^^form'],
@@ -32,25 +32,25 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             // All classed needed to add to validation message
             var errorClasses = [errorElementClass, helpBlock];
 
-            var $formGroupElement = bsValidationService.getFormGroupElement($element);
+            var $formGroupElement = validationService.getFormGroupElement($element);
             if (!$formGroupElement) {
               throw 'No parent form group element found for input element';
             }
 
             var displayValidationState = false;
-            var shouldValidateOnBlur = bsValidationConfig.shouldValidateOnBlur();
-            var shouldValidateOnDisplay = bsValidationConfig.shouldValidateOnDisplay();
-            var shouldValidateOnSubmit = bsValidationConfig.shouldValidateOnSubmit();
+            var shouldValidateOnBlur = validationConfig.shouldValidateOnBlur();
+            var shouldValidateOnDisplay = validationConfig.shouldValidateOnDisplay();
+            var shouldValidateOnSubmit = validationConfig.shouldValidateOnSubmit();
 
-            var metaInformation = bsValidationService.getMetaInformation($element);
-            var displayErrorAs = bsValidationService.displayErrorPreference($element, $attr);
-            var validationMessageService = bsValidationService.getValidationMessageService(displayErrorAs);
+            var metaInformation = validationService.getMetaInformation($element);
+            var displayErrorAs = validationService.displayErrorPreference($element, $attr);
+            var validationMessageService = validationService.getValidationMessageService(displayErrorAs);
 
             // Register generic custom validators if added to element
-            angular.forEach(bsValidationService.getValidators(), function(key) {
+            angular.forEach(validationService.getValidators(), function(key) {
               var attrValue = $element.attr(key);
               if ($attr[key] || (angular.isDefined(attrValue) && attrValue !== false)) {
-                bsValidationService.addValidator($scope, $attr, ngModelController, key, metaInformation);
+                validationService.addValidator($scope, $attr, ngModelController, key, metaInformation);
               }
             });
 
@@ -63,7 +63,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             }
 
             function addErrors() {
-              bsValidationService.addErrorClass($formGroupElement);
+              validationService.addErrorClass($formGroupElement);
               validationMessageService.showErrorMessage($element, $attr, ngModelController, $formGroupElement);
               return false;
             }
