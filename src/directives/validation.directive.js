@@ -5,17 +5,12 @@
 /**
  * @ngdoc directive
  * @name bsValidation
- * @requires $interpolate
  * @requires BsValidationService
- * @description
- * This directive must be applied to every input element on which we need to use custom validations like jQuery.
- * Those element must have ng-model attributes. This directive will automatically add the 'has-error' class on the
- * parent element with class '.form-group' and will show/hide the validation message automatically.
 */
 angular.module('bootstrap.angular.validation').directive('bsValidation', [
-  '$interpolate', '$timeout', '$injector', 'BsValidationService', 'bsValidationConfig',
+  '$timeout', '$injector', 'BsValidationService', 'bsValidationConfig',
 
-    function($interpolate, $timeout, $injector, validationService, validationConfig) {
+    function($timeout, $injector, validationService, validationConfig) {
       return {
           restrict: 'A',
           require: ['ngModel', '?^^form'],
@@ -46,43 +41,62 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               }
             });
 
-            function removeErrors() {
-              validationMessageService.hideErrorMessage($element, $formGroupElement);
+            function addErrorClass() {
+              validationService.addErrorClass($formGroupElement);
             }
 
             function removeSuccessClass() {
-              $formGroupElement.removeClass('has-success');
+              validationService.removeSuccessClass($formGroupElement);
             }
 
-            function addErrors() {
-              validationService.addErrorClass($formGroupElement);
+            function displayError() {
+              addErrorClass();
               validationMessageService.showErrorMessage($element, $attr, ngModelController, $formGroupElement);
-              return false;
+            }
+
+            function hideError() {
+              validationMessageService.hideErrorMessage($element, $formGroupElement);
             }
 
             function addSuccessClass() {
-              $formGroupElement.addClass('has-success');
-              return removeErrors();
+              validationService.addSuccessClass($formGroupElement);
+              return hideError();
+            }
+
+            function displaySuccess() {
+              addSuccessClass();
+            }
+
+            function hideSuccess() {
+              removeSuccessClass();
             }
 
             function displayOrHideValidationState() {
               if (!displayValidationState) {
-                removeSuccessClass();
-                removeErrors();
+                hideSuccess();
+                return hideError();
               }
 
-              if (ngModelController.$valid) { return addSuccessClass(); }
-              if (ngModelController.$invalid) { return addErrors(); }
+              if (ngModelController.$valid) { return displaySuccess(); }
+              if (ngModelController.$invalid) { return displayError(); }
+            }
+
+            function showValidation() {
+              displayValidationState = true;
+              displayOrHideValidationState();
+            }
+
+            function hideValidation() {
+              displayValidationState = false;
+              displayOrHideValidationState();
             }
 
             if (shouldValidateOnDisplay) {
               displayValidationState = true;
               ngModelController.$validate();
 
-              $timeout(function() {
-                // TODO Figure out why do we require $timeout here
-                displayOrHideValidationState();
-              });
+              // TODO Figure out why do we require $timeout here
+              $timeout(displayOrHideValidationState);
             }
 
             if (shouldValidateOnBlur) {
@@ -107,9 +121,18 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               });
             }
 
-            ngModelController.$viewChangeListeners.push(function() {
+            // TODO Find alternative for this watch
+            $scope.$watch(function() {
+              return ngModelController.$viewValue + ngModelController.$modelValue;
+            }, displayOrHideValidationState);
+
+            $scope.$on('onBsValidationStateChange', function(e, data) {
+              displayValidationState = data.showValidationState;
               displayOrHideValidationState();
             });
+            
+            ngModelController.$showValidation = showValidation;
+            ngModelController.$hideValidation = hideValidation;
           }
         };
     }

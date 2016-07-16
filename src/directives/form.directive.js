@@ -51,9 +51,17 @@ angular.module('bootstrap.angular.validation').directive('form', [
           delete $formAttributes.ngSubmit;
 
           var preLinkFunction = function($scope, formElement, $attr, formController) {
-            // Expose a method to manually trigger the validation
-            formController.$validate = function() {
+            // Expose a method to manually show the validation state
+            formController.$showValidation = function() {
                 formController.$setSubmitted();
+                // Tell form elements to show validation state
+                $scope.$broadcast('onBsValidationStateChange', {showValidationState: true});
+            };
+
+            formController.$hideValidation = function () {
+              formController.$setPristine();
+              // Tell form elements to hide validation state
+              $scope.$broadcast('onBsValidationStateChange', {showValidationState: false});
             };
 
             formElement.on('submit', function(e) {
@@ -78,12 +86,12 @@ angular.module('bootstrap.angular.validation').directive('form', [
                  * Do not show validation errors once the form gets submitted. You can still display the
                  * validation errors after form submission by calling '$setSubmitted' in your form controller.
                  */
-                formController.$setPristine();
+                formController.$hideValidationState();
               });
 
               /**
                * Prevent other submit event listener registered via Angular so that we can mark the form with
-               * the prestine state. Otherwise, that Angular's listener is getting called at the last and is again
+               * the pristine state. Otherwise, that Angular's listener is getting called at the last and is again
                * setting form to the submitted.
                *
                * https://api.jquery.com/event.stopimmediatepropagation/

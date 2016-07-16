@@ -97,8 +97,13 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     },
 
     addErrorClass: function($formGroupElement) {
-      $formGroupElement.removeClass('has-success');
+      this.removeErrorClass($formGroupElement);
       $formGroupElement.addClass('has-error');
+    },
+
+    addSuccessClass: function($formGroupElement) {
+      this.removeErrorClass($formGroupElement);
+      $formGroupElement.addClass('has-success');
     },
 
     addToNgIncludedURLs: function (url) {
@@ -182,6 +187,10 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
 
     removeErrorClass: function($formGroupElement) {
       $formGroupElement.removeClass('has-error');
+    },
+
+    removeSuccessClass: function($formGroupElement) {
+      $formGroupElement.removeClass('has-success');
     },
 
     resolveMessage: function ($element, $attr, key) {
