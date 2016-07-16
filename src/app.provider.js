@@ -1,5 +1,3 @@
-/* global document */
-
 'use strict';
 
 angular.module('bootstrap.angular.validation').provider('bsValidationConfig', function() {
@@ -24,6 +22,7 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
   this.global.successClass = 'has-success';
   this.global.errorMessagePrefix = '';
   this.global.tooltipPlacement = 'bottom-left';
+  this.global.tooltipAppendToBody = false;
 
   this.global.setValidateFieldsOn = function(event) {
     if (!event) {
@@ -49,6 +48,7 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
     return {
       errorClass: _this.global.errorClass,
       successClass: _this.global.successClass,
+      tooltipAppendToBody: _this.global.tooltipAppendToBody,
 
       getDisplayErrorsAs: function() {
         return displayErrorsAs;

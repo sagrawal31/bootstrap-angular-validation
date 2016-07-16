@@ -27,7 +27,13 @@ function($injector, validationService, $interpolate, $templateCache, validationC
 
     var data = {errorClass: validationConfig.errorClass, tooltipID: tooltipID};
     var html = $templateCache.get('bav/template/tooltip.html');
-    angular.element('body').append($interpolate(html)(data));
+    html = $interpolate(html)(data);
+
+    if (validationConfig.appendToBody) {
+      angular.element(document.body).append(html);
+    } else {
+      $element.after(html);
+    }
 
     return angular.element(document.getElementById(tooltipID));
   }
@@ -57,11 +63,12 @@ function($injector, validationService, $interpolate, $templateCache, validationC
       var message = validationService.getErrorMessage($element, $attr, ngModelController);
       var $errorTooltip = getErrorTooltip($element);
       var placement = getTooltipPlacement($element);
+      var appendToBody = validationConfig.tooltipAppendToBody;
 
       $errorTooltip.find('.tooltip-inner').html(message);
 
       var $position = $injector.get('$uibPosition');
-      var ttPosition = $position.positionElements($element, $errorTooltip, placement, true);
+      var ttPosition = $position.positionElements($element, $errorTooltip, placement, appendToBody);
       $errorTooltip.css({ top: ttPosition.top + 'px', left: ttPosition.left + 'px' });
       $errorTooltip.addClass('in');
 

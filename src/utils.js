@@ -2,7 +2,7 @@
 
 'use strict';
 
-if (!window.jQuery && !angular.element.prototype.find) {
+if (!window.jQuery) {
   /**
    * @ngdoc function
    * @name angular.element.prototype.find
