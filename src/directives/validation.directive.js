@@ -91,14 +91,6 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               displayOrHideValidationState();
             }
 
-            if (shouldValidateOnDisplay) {
-              displayValidationState = true;
-              ngModelController.$validate();
-
-              // TODO Figure out why do we require $timeout here
-              $timeout(displayOrHideValidationState);
-            }
-
             if (shouldValidateOnBlur) {
               var dewatcher = $scope.$watch(function () {
                 return ngModelController.$touched;
@@ -119,6 +111,10 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
                 displayValidationState = submitted;
                 displayOrHideValidationState();
               });
+            }
+
+            if (shouldValidateOnDisplay) {
+              showValidation();
             }
 
             // TODO Find alternative for this watch
