@@ -1,11 +1,10 @@
 'use strict';
 
-angular.module('bootstrap.angular.validation').factory('simpleMessageService', ['BsValidationService', 'bsValidationConfig',
-function(validationService, validationConfig) {
+angular.module('bootstrap.angular.validation').factory('simpleMessageService', ['BsValidationService', function(validationService) {
 
   var errorElementClass = '.bs-invalid-msg';
 
-  function errorContainer($element, $formGroupElement) {
+  function getErrorContainer($element, $formGroupElement) {
     var $errorElement = $formGroupElement.findOne(errorElementClass);
     if ($errorElement && $errorElement.length) {
       return $errorElement;
@@ -31,15 +30,10 @@ function(validationService, validationConfig) {
       $formGroupElement.findAll(errorElementClass).addClass('ng-hide');
     },
 
-    resolveMessage: function($element, $attr, key) {
-      return validationService.resolveMessage($element, $attr, key);
-    },
-
     showErrorMessage: function($element, $attr, ngModelController, $formGroupElement) {
-      var firstErrorKey = Object.keys(ngModelController.$error)[0];
-      var message = validationConfig.getErrorMessagePrefix() + this.resolveMessage($element, $attr, firstErrorKey);
+      var message = validationService.getErrorMessage($element, $attr, ngModelController);
 
-      var $errorElement = errorContainer($element, $formGroupElement);
+      var $errorElement = getErrorContainer($element, $formGroupElement);
       $errorElement.html(message).removeClass('ng-hide');
     }
   };

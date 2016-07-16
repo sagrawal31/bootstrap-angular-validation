@@ -3,11 +3,11 @@
 'use strict';
 
 angular.module('bootstrap.angular.validation').factory('tooltipMessageService', ['$injector', 'BsValidationService',
-'bsValidationConfig', function($injector, validationService, validationConfig) {
+'$interpolate', '$templateCache', 'bsValidationConfig',
+function($injector, validationService, $interpolate, $templateCache, validationConfig) {
 
   function getElementID($element) {
     var id = $element.attr('id');
-
     if (id) {
       return id;
     }
@@ -17,13 +17,34 @@ angular.module('bootstrap.angular.validation').factory('tooltipMessageService', 
     return id;
   }
 
-  function getErrorTooltipID($element) {
-    return 'bs-error-' + getElementID($element);
+  function getErrorTooltip($element) {
+    var tooltipID = 'bs-error-' + getElementID($element);
+    var tooltipElement = document.getElementById(tooltipID);
+
+    if (tooltipElement) {
+      return angular.element(tooltipElement);
+    }
+
+    var data = {errorClass: validationConfig.errorClass, tooltipID: tooltipID};
+    var html = $templateCache.get('bav/template/tooltip.html');
+    angular.element('body').append($interpolate(html)(data));
+
+    return angular.element(document.getElementById(tooltipID));
   }
 
-  function getErrorTooltip($element) {
-    var tooltipID = getErrorTooltipID($element);
-    return angular.element(document.getElementById(tooltipID));
+  function getTooltipPlacement($element) {
+    var attributeName = 'bs-tooltip-placement';
+    if ($element.attr(attributeName)) {
+      return $element.attr(attributeName);
+    }
+
+    var parentForm = $element.parents('form');
+    if (parentForm && parentForm.attr(attributeName)) {
+      return parentForm.attr(attributeName);
+    }
+
+    // Use the global config
+    return validationConfig.getTooltipPlacement();
   }
 
   return {
@@ -32,28 +53,28 @@ angular.module('bootstrap.angular.validation').factory('tooltipMessageService', 
       getErrorTooltip($element).removeClass('in');
     },
 
-    resolveMessage: function($element, $attr, key) {
-      return validationService.resolveMessage($element, $attr, key);
-    },
-
     showErrorMessage: function($element, $attr, ngModelController) {
-      var firstErrorKey = Object.keys(ngModelController.$error)[0];
-      var message = validationConfig.getErrorMessagePrefix() + this.resolveMessage($element, $attr, firstErrorKey);
-
-      var tooltipID = getErrorTooltipID($element);
+      var message = validationService.getErrorMessage($element, $attr, ngModelController);
       var $errorTooltip = getErrorTooltip($element);
+      var placement = getTooltipPlacement($element);
 
-      if (!$errorTooltip || !$errorTooltip.length) {
-        angular.element('body').append('<div class="tooltip has-error" id="' + tooltipID + '" role="tooltip"' +
-          '><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>');
+      $errorTooltip.findOne('.tooltip-inner').html(message);
 
-        $errorTooltip = getErrorTooltip($element);
+      var $position = $injector.get('$uibPosition');
+      var ttPosition = $position.positionElements($element, $errorTooltip, placement, true);
+      $errorTooltip.css({ top: ttPosition.top + 'px', left: ttPosition.left + 'px' });
+      $errorTooltip.addClass('in');
+
+      if (!$errorTooltip.hasClass(ttPosition.placement.split('-')[0])) {
+        $errorTooltip.addClass(ttPosition.placement.split('-')[0]);
       }
 
-      var ttPosition = $injector.get('$uibPosition').positionElements($element, $errorTooltip, 'bottom-left', true);
-      $errorTooltip.css({ top: ttPosition.top + 'px', left: ttPosition.left + 'px' });
-      $errorTooltip.findOne('.tooltip-inner').html(message);
-      $errorTooltip.addClass('in').addClass(ttPosition.placement);
+      $position.positionArrow($errorTooltip, ttPosition.placement);
     }
   };
+}]);
+
+angular.module('bootstrap.angular.validation').run(['$templateCache', function($templateCache) {
+  $templateCache.put('bav/template/tooltip.html', '<div class="tooltip {{errorClass}}" id="{{tooltipID}}"' +
+    ' role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>');
 }]);

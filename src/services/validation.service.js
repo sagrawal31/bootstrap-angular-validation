@@ -98,14 +98,14 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
 
     addErrorClass: function($formGroupElement) {
       this.removeErrorClass($formGroupElement);
-      $formGroupElement.addClass('has-error');
+      $formGroupElement.addClass(validationConfig.errorClass);
     },
 
     addSuccessClass: function($formGroupElement) {
       this.removeErrorClass($formGroupElement);
 
       if (validationConfig.shouldAddSuccessClass()) {
-        $formGroupElement.addClass('has-success');
+        $formGroupElement.addClass(validationConfig.successClass);
       }
     },
 
@@ -157,6 +157,11 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       return messages[key];
     },
 
+    getErrorMessage: function($element, $attr, ngModelController) {
+      var firstErrorKey = Object.keys(ngModelController.$error)[0];
+      return validationConfig.getErrorMessagePrefix() + this.resolveMessage($element, $attr, firstErrorKey);
+    },
+
     getFormGroupElement: function($element) {
       // Search parent element with class form-group to operate on.
       var formGroupElement = $element.parents(formGroupClass);
@@ -190,11 +195,11 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     },
 
     removeErrorClass: function($formGroupElement) {
-      $formGroupElement.removeClass('has-error');
+      $formGroupElement.removeClass(validationConfig.errorClass);
     },
 
     removeSuccessClass: function($formGroupElement) {
-      $formGroupElement.removeClass('has-success');
+      $formGroupElement.removeClass(validationConfig.successClass);
     },
 
     resolveMessage: function ($element, $attr, key) {

@@ -20,7 +20,10 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
   var _this = this;
   this.global = {};
   this.global.addSuccessClass = true;
+  this.global.errorClass = 'has-error';
+  this.global.successClass = 'has-success';
   this.global.errorMessagePrefix = '';
+  this.global.tooltipPlacement = 'bottom-left';
 
   this.global.setValidateFieldsOn = function(event) {
     if (!event) {
@@ -44,12 +47,19 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
 
   this.$get = [function() {
     return {
+      errorClass: _this.global.errorClass,
+      successClass: _this.global.successClass,
+
       getDisplayErrorsAs: function() {
         return displayErrorsAs;
       },
 
       getErrorMessagePrefix: function() {
         return _this.global.errorMessagePrefix || '';
+      },
+
+      getTooltipPlacement: function() {
+        return _this.global.tooltipPlacement;
       },
 
       shouldAddSuccessClass: function() {
