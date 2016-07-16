@@ -32,25 +32,25 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
   var ngIncludedURLs = [];
 
   var genericValidators = {
-    digits: function (value) {
+    digits: function(value) {
       return (/^\d+$/).test(value);
     },
-    equalto: function (value, $scope, attr) {
+    equalto: function(value, $scope, attr) {
       return value + '' === attr.equalto + '';
     },
-    number: function (value) {
+    number: function(value) {
       return (/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/).test(value);
     },
-    min: function (value, $scope, attr) {
+    min: function(value, $scope, attr) {
       return parseFloat(value) >= parseFloat(attr.min);
     },
-    max: function (value, $scope, attr) {
+    max: function(value, $scope, attr) {
       return parseFloat(value) <= parseFloat(attr.max);
     },
-    length: function (value, $scope, attr) {
+    length: function(value, $scope, attr) {
       return value.length === parseInt(attr.length);
     },
-    strictemail: function (value) {
+    strictemail: function(value) {
       return new RegExp(/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/).test(value);
     }
   };
@@ -58,7 +58,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
   var selectors = [];
   var elements = ['input', 'select', 'textarea'];
 
-  angular.forEach(elements, function (element) {
+  angular.forEach(elements, function(element) {
     selectors.push(element + '[ng-model]');
     selectors.push(element + '[data-ng-model]');
   });
@@ -70,13 +70,13 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
      * Search all the input element inside the given DOM element and apply the 'bs-validation' directive so we
      * need not a add it for every form element.
      */
-    getValidators: function () {
+    getValidators: function() {
       var builtIn = ['equalto', 'min', 'max', 'number', 'digits', 'length'];
       var additional = Object.keys(genericValidators);
       return builtIn.concat(additional);
     },
 
-    getMeta: function () {
+    getMeta: function() {
       return ['matchName'];
     },
 
@@ -90,7 +90,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       return metaInformation;
     },
 
-    addDirective: function ($element) {
+    addDirective: function($element) {
       var validateableElements = $element.find(selector);
       validateableElements.attr('bs-validation', '');
       return validateableElements;
@@ -109,20 +109,20 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       }
     },
 
-    addToNgIncludedURLs: function (url) {
+    addToNgIncludedURLs: function(url) {
       if (ngIncludedURLs.indexOf(url) === -1) {
         ngIncludedURLs.push(url);
       }
     },
 
-    addValidator: function ($scope, $attr, ngModelController, validatorKey) {
-      ngModelController.$validators[validatorKey] = function (modelValue, viewValue) {
+    addValidator: function($scope, $attr, ngModelController, validatorKey) {
+      ngModelController.$validators[validatorKey] = function(modelValue, viewValue) {
         var value = modelValue || viewValue;
         return ngModelController.$isEmpty(value) || genericValidators[validatorKey](value, $scope, $attr);
       };
     },
 
-    checkNgIncludedURL: function (url) {
+    checkNgIncludedURL: function(url) {
       var index = ngIncludedURLs.indexOf(url);
       if (index > -1) {
         ngIncludedURLs.splice(index, 1);
@@ -153,7 +153,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       return validationConfig.getDisplayErrorsAs();
     },
 
-    getDefaultMessage: function (key) {
+    getDefaultMessage: function(key) {
       return messages[key];
     },
 
@@ -202,7 +202,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       $formGroupElement.removeClass(validationConfig.successClass);
     },
 
-    resolveMessage: function ($element, $attr, key) {
+    resolveMessage: function($element, $attr, key) {
       var metaInformation = this.getMetaInformation($element);
       var message = $element.attr(key + '-notification') || this.getDefaultMessage(key);
 

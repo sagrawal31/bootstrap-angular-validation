@@ -92,7 +92,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             }
 
             if (shouldValidateOnBlur) {
-              var dewatcher = $scope.$watch(function () {
+              var dewatcher = $scope.$watch(function() {
                 return ngModelController.$touched;
               }, function(lostFocus) {
                 if (lostFocus) {
