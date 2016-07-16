@@ -1,16 +1,16 @@
 'use strict';
 
-angular.module('bootstrap.angular.validation').factory('simpleMessageService', ['BsValidationService', function(validationService) {
+angular.module('bootstrap.angular.validation').factory('simpleMessageService', ['BsValidationService', 'bsValidationConfig',
+function(validationService, validationConfig) {
 
   var errorElementClass = '.bs-invalid-msg';
-  var helpBlockClass = '.help-block';
 
-  var errorClasses = [errorElementClass.substring(1), helpBlockClass.substring(1)];
-  var markupClasses = errorClasses.join(' ');
+  function errorContainer($element, $formGroupElement) {
+    var $errorElement = $formGroupElement.findOne(errorElementClass);
+    if ($errorElement && $errorElement.length) {
+      return $errorElement;
+    }
 
-  var iconMarkup = '<i class="fa fa-exclamation-triangle fa-fw"></i>';
-
-  function errorContainer($element, $formGroupElement, message) {
     var insertAfter;
 
     // Check if the container have any Bootstrap input group then append the error after it
@@ -21,15 +21,14 @@ angular.module('bootstrap.angular.validation').factory('simpleMessageService', [
       insertAfter = $element;
     }
 
-    message = '<span class="' + markupClasses + '">' + iconMarkup + message + '</span>';
-
-    insertAfter.after(message);
+    insertAfter.after('<span class="help-block ' + errorElementClass.substring(1) + '"></span>');
+    return $formGroupElement.findOne(errorElementClass);
   }
 
   return {
     hideErrorMessage: function($element, $formGroupElement) {
       validationService.removeErrorClass($formGroupElement);
-      $formGroupElement.findAll('span.' + errorClasses.join('.')).addClass('ng-hide');
+      $formGroupElement.findAll(errorElementClass).addClass('ng-hide');
     },
 
     resolveMessage: function($element, $attr, key) {
@@ -38,14 +37,10 @@ angular.module('bootstrap.angular.validation').factory('simpleMessageService', [
 
     showErrorMessage: function($element, $attr, ngModelController, $formGroupElement) {
       var firstErrorKey = Object.keys(ngModelController.$error)[0];
-      var message = this.resolveMessage($element, $attr, firstErrorKey);
+      var message = validationConfig.getErrorMessagePrefix() + this.resolveMessage($element, $attr, firstErrorKey);
 
-      var errorElement = $formGroupElement.findOne(errorElementClass);
-      if (errorElement.length === 0) {
-        errorContainer($element, $formGroupElement, message);
-      }
-
-      errorElement.html(iconMarkup + message).removeClass('ng-hide');
+      var $errorElement = errorContainer($element, $formGroupElement);
+      $errorElement.html(message).removeClass('ng-hide');
     }
   };
 }]);

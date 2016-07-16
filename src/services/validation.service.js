@@ -6,7 +6,7 @@
  * @description Core service of this module to provide various default validations.
  */
 angular.module('bootstrap.angular.validation').factory('BsValidationService', ['$interpolate', 'bsValidationConfig',
-'$injector', function($interpolate, bsValidationConfig, $injector) {
+'$injector', function($interpolate, validationConfig, $injector) {
 
   var displayErrorAsAttrName = 'bsDisplayErrorAs';
   var customFormGroup = '[bs-form-group]';
@@ -103,7 +103,10 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
 
     addSuccessClass: function($formGroupElement) {
       this.removeErrorClass($formGroupElement);
-      $formGroupElement.addClass('has-success');
+
+      if (validationConfig.shouldAddSuccessClass()) {
+        $formGroupElement.addClass('has-success');
+      }
     },
 
     addToNgIncludedURLs: function (url) {
@@ -147,7 +150,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       }
 
       // Use the global preference
-      return bsValidationConfig.getDisplayErrorsAs();
+      return validationConfig.getDisplayErrorsAs();
     },
 
     getDefaultMessage: function (key) {

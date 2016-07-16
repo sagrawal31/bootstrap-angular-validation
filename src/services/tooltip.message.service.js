@@ -3,9 +3,7 @@
 'use strict';
 
 angular.module('bootstrap.angular.validation').factory('tooltipMessageService', ['$injector', 'BsValidationService',
-function($injector, validationService) {
-
-  var iconMarkup = '<i class="fa fa-exclamation-triangle fa-fw"></i>';
+'bsValidationConfig', function($injector, validationService, validationConfig) {
 
   function getElementID($element) {
     var id = $element.attr('id');
@@ -40,7 +38,7 @@ function($injector, validationService) {
 
     showErrorMessage: function($element, $attr, ngModelController) {
       var firstErrorKey = Object.keys(ngModelController.$error)[0];
-      var message = this.resolveMessage($element, $attr, firstErrorKey);
+      var message = validationConfig.getErrorMessagePrefix() + this.resolveMessage($element, $attr, firstErrorKey);
 
       var tooltipID = getErrorTooltipID($element);
       var $errorTooltip = getErrorTooltip($element);

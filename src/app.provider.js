@@ -18,13 +18,11 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
   }
 
   var _this = this;
+  this.global = {};
+  this.global.addSuccessClass = true;
+  this.global.errorMessagePrefix = '';
 
-  // Values can be "simple" or "tooltip"
-  _this.displayErrorsAs = 'simple';
-
-  _this.addSuccessClass = true;
-
-  _this.setValidateFieldsOn = function(event) {
+  this.global.setValidateFieldsOn = function(event) {
     if (!event) {
       throw 'Please provide an string or list of events to validate fields on';
     }
@@ -36,7 +34,7 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
     validateFieldsOn = event;
   };
 
-  _this.setDisplayErrorsAs = function(type) {
+  this.global.setDisplayErrorsAs = function(type) {
     if (!type) {
       throw 'Please provide the way validation error should be displayed. In-built options are "simple" & "tooltip".';
     }
@@ -44,14 +42,18 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
     displayErrorsAs = type;
   };
 
-  _this.$get = [function() {
+  this.$get = [function() {
     return {
       getDisplayErrorsAs: function() {
         return displayErrorsAs;
       },
 
+      getErrorMessagePrefix: function() {
+        return _this.global.errorMessagePrefix || '';
+      },
+
       shouldAddSuccessClass: function() {
-        return _this.addSuccessClass;
+        return _this.global.addSuccessClass;
       },
 
       shouldValidateOnBlur: function() {
