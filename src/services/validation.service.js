@@ -91,7 +91,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     },
 
     addDirective: function ($element) {
-      var validateableElements = $element.findAll(selector);
+      var validateableElements = $element.find(selector);
       validateableElements.attr('bs-validation', '');
       return validateableElements;
     },

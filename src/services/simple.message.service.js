@@ -5,7 +5,7 @@ angular.module('bootstrap.angular.validation').factory('simpleMessageService', [
   var errorElementClass = '.bs-invalid-msg';
 
   function getErrorContainer($element, $formGroupElement) {
-    var $errorElement = $formGroupElement.findOne(errorElementClass);
+    var $errorElement = $formGroupElement.find(errorElementClass);
     if ($errorElement && $errorElement.length) {
       return $errorElement;
     }
@@ -13,7 +13,7 @@ angular.module('bootstrap.angular.validation').factory('simpleMessageService', [
     var insertAfter;
 
     // Check if the container have any Bootstrap input group then append the error after it
-    var groupElement = $formGroupElement.findOne('.input-group');
+    var groupElement = $formGroupElement.find('.input-group');
     if (groupElement.length > 0) {
       insertAfter = groupElement;
     } else {
@@ -21,13 +21,13 @@ angular.module('bootstrap.angular.validation').factory('simpleMessageService', [
     }
 
     insertAfter.after('<span class="help-block ' + errorElementClass.substring(1) + '"></span>');
-    return $formGroupElement.findOne(errorElementClass);
+    return $formGroupElement.find(errorElementClass);
   }
 
   return {
     hideErrorMessage: function($element, $formGroupElement) {
       validationService.removeErrorClass($formGroupElement);
-      $formGroupElement.findAll(errorElementClass).addClass('ng-hide');
+      $formGroupElement.find(errorElementClass).addClass('ng-hide');
     },
 
     showErrorMessage: function($element, $attr, ngModelController, $formGroupElement) {

@@ -58,7 +58,7 @@ function($injector, validationService, $interpolate, $templateCache, validationC
       var $errorTooltip = getErrorTooltip($element);
       var placement = getTooltipPlacement($element);
 
-      $errorTooltip.findOne('.tooltip-inner').html(message);
+      $errorTooltip.find('.tooltip-inner').html(message);
 
       var $position = $injector.get('$uibPosition');
       var ttPosition = $position.positionElements($element, $errorTooltip, placement, true);

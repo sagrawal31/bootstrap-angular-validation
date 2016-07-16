@@ -29,7 +29,7 @@ angular.module('bootstrap.angular.validation').directive('form', [
            * If there is an 'ng-include' directive available inside a form then the 'bs-validation' directive
            * won't get applied until Angular resolves the view sourced by 'ng-include'.
            */
-          var nestedNgIncludeElement = $formElement.findAll('[ng-include]');
+          var nestedNgIncludeElement = $formElement.find('[ng-include]');
           if (nestedNgIncludeElement.length > 0) {
             var src = $parse(nestedNgIncludeElement.attr('ng-include'))();
 
