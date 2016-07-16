@@ -130,18 +130,19 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     },
 
     displayErrorPreference: function($element, $attr) {
-      if ($attr[displayErrorAsAttrName]) {
-        return $attr[displayErrorAsAttrName];
+      var attrName = displayErrorAsAttrName;
+      if ($attr[attrName]) {
+        return $attr[attrName];
       } else {
         var $parentForm = $element.parents('form');
 
         // .attr() method not accepting camelCase version of the attribute name. Converting it to dashed-case
-        displayErrorAsAttrName = displayErrorAsAttrName.replace(/([A-Z])/g, function($1) {
+        attrName = attrName.replace(/([A-Z])/g, function($1) {
           return '-' + $1.toLowerCase();
         });
 
-        if ($parentForm && $parentForm.attr(displayErrorAsAttrName)) {
-          return $parentForm.attr(displayErrorAsAttrName);
+        if ($parentForm && $parentForm.attr(attrName)) {
+          return $parentForm.attr(attrName);
         }
       }
 

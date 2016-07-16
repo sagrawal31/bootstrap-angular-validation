@@ -2,8 +2,8 @@
 
 'use strict';
 
-angular.module('bootstrap.angular.validation').factory('tooltipMessageService', ['$uibPosition', 'BsValidationService',
-function($uibPosition, validationService) {
+angular.module('bootstrap.angular.validation').factory('tooltipMessageService', ['$injector', 'BsValidationService',
+function($injector, validationService) {
 
   var iconMarkup = '<i class="fa fa-exclamation-triangle fa-fw"></i>';
 
@@ -38,7 +38,7 @@ function($uibPosition, validationService) {
       return validationService.resolveMessage($element, $attr, key);
     },
 
-    showErrorMessage: function($element, $attr, ngModelController, $formGroupElement) {
+    showErrorMessage: function($element, $attr, ngModelController) {
       var firstErrorKey = Object.keys(ngModelController.$error)[0];
       var message = this.resolveMessage($element, $attr, firstErrorKey);
 
@@ -52,7 +52,7 @@ function($uibPosition, validationService) {
         $errorTooltip = getErrorTooltip($element);
       }
 
-      var ttPosition = $uibPosition.positionElements($element, $errorTooltip, 'bottom-left', true);
+      var ttPosition = $injector.get('$uibPosition').positionElements($element, $errorTooltip, 'bottom-left', true);
       $errorTooltip.css({ top: ttPosition.top + 'px', left: ttPosition.left + 'px' });
       $errorTooltip.findOne('.tooltip-inner').html(message);
       $errorTooltip.addClass('in').addClass(ttPosition.placement);
