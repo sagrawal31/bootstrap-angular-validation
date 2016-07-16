@@ -1,9 +1,5 @@
 /* global angular */
 
-/**
- * Created by shashank on 29/06/16.
- */
-
 angular.module('bsValidationApp', ['ngRoute']);
 
 angular.module('bsValidationApp')
@@ -15,8 +11,8 @@ angular.module('bsValidationApp')
           templateUrl: 'views/home.html'
         })
 
-        .when('/phones/:phoneId', {
-          template: '<phone-detail></phone-detail>'
+        .when('/docs', {
+          templateUrl: 'views/documentations.html'
         })
 
         .otherwise('/');
