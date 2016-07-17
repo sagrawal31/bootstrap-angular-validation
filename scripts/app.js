@@ -15,6 +15,10 @@ angular.module('bsValidationApp')
           templateUrl: 'views/how-it-works.html'
         })
 
+        .when('/customization-and-examples', {
+          templateUrl: 'views/customization.html'
+        })
+
         .otherwise('/');
     }
   ]);
@@ -30,6 +34,7 @@ angular.module('bsValidationApp').directive('codepen', ['$interpolate', '$sce', 
         'by Shashank Agrawal (<a href="http://codepen.io/shashank-agrawal">@shashank-agrawal</a>) ' +
         'on <a href="http://codepen.io">CodePen</a>.</iframe>';
     },
+    scope: true,
     link: function($scope, $element, $attr) {
       $scope.height = $attr.height || 300;
       $scope.themeId = $attr.themeId || 'default';

@@ -1,0 +1,251 @@
+<h1>
+  <a class="anchor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>
+  Customization & Examples
+</h1>
+
+<h2>Changing default classes</h2>
+
+<p>
+  The default classes <strong class="pl-s">.has-error</strong> & <strong class="pl-s">.has-success</strong> can be
+  customized globally. The following example uses <strong class="pl-s">.has-warning</strong> instead of <strong
+    class="pl-s">.has-error</strong> class.
+</p>
+
+<codepen pen-id="JKrgxx" default-tab="js"></codepen>
+
+<h2>Disabling success state and common prefix for error messages</h2>
+
+<p>
+  You can globally disable showing the success validation state. Also, you can prefix a common message to be
+  displayed for all error validation messages. The following example will disable showing the success validation
+  state and will display a warning sign in all the messages.
+</p>
+
+<codepen pen-id="groVyP" default-tab="js"></codepen>
+
+<h2>Changing the event for displaying validation state</h2>
+
+<p>
+  The below example will now display the validation state only after user attempt to submit the form.
+  <strong>A few things to look out for when playing around this particular example:</strong>
+</p>
+
+<ol>
+  <li>
+    <p>
+      Before a field is marked as invalid, the validation is lazy: Before submitting the form for the first time,
+      the user can tab through fields without getting annoying messages – they won't get bugged before having the
+      chance to actually enter a correct value.
+    </p>
+  </li>
+
+  <li>
+    <p>
+      Once a field is marked invalid, it is eagerly validated: As soon as the user has entered the necessary value, the
+      error message is removed.
+    </p>
+  </li>
+
+  <li>
+    <p>
+      If the user enters something in a non-marked field, and tabs/clicks away from it (blur the field), it is validated
+      – obviously the user had the intention to enter something, but failed to enter the correct value.
+    </p>
+  </li>
+
+  <li>
+    <p>
+      After trying to submit an invalid form, the first invalid element is focused, allowing the user to correct the
+      field.
+    </p>
+  </li>
+</ol>
+
+<p>
+  <strong>This validation strategy is inspired from the jQuery validation mechanism.</strong>
+</p>
+
+<codepen pen-id="VjyoOk" default-tab="js" height="500"></codepen>
+
+<h2>Using on display event</h2>
+
+<p>
+  In the following example, the validation will be displayed as the form is displayed to the user.
+</p>
+
+<codepen pen-id="bZLbdR" default-tab="js" height="500"></codepen>
+
+<h2>Customizing messages & in-build validations</h2>
+
+<p>
+  The following example demonstrate how can you override the default messages per input field and per error key.
+  Also explains some built-in validators. You can try the following:
+</p>
+
+<ul>
+  <li>First try to submit the form without filling in. This will display all the validation state.</li>
+
+  <li>
+    The message for required validation on the email field is changed by setting
+    <strong class="pl-s">required-notification="My message"</strong> attribute to the input field where
+    <strong>required</strong> was the validation error key name.
+  </li>
+
+  <li>
+    Try entering some value in the first name and then try inputting some numbers into it. That will display the
+    default validation message for <strong>pattern</strong> validation.
+  </li>
+
+  <li>
+    Do the above for last name and see it's message. Message is overridden by
+    <strong class="pl-s">pattern-notification="My message"</strong> attribute.
+  </li>
+
+  <li>
+    Enter a different value for the password and confirm password. The confirm password field will complain that
+    value does not match. This is achieved by an in-built validator <strong class="pl-s">equalto=""</strong> which
+    accepts the <strong>ng-model</strong> name of other field.
+  </li>
+
+  <li>
+    Another in-built validation from this library is applied to the age field i.e. <strong class="pl-s">min</strong>
+    validation to validate a minimum value.
+  </li>
+</ul>
+
+<codepen pen-id="JKpPdq" height="600"></codepen>
+
+<p>
+  The <a href="https://github.com/sagrawal14/bootstrap-angular-validation/blob/v1.0.0-RC2/src/services/validation.service.js#L34">link</a>
+  contains all the in-built validators and following are the default message of all the validators.
+</p>
+
+<h3>
+  <a id="default-error-messages" class="anchor" href="#default-error-messages" aria-hidden="true"><span
+      aria-hidden="true" class="octicon octicon-link"></span></a>Default error messages</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Validation</th>
+      <th>Message</th>
+    </tr>
+  </thead>
+  <tbody ng-non-bindable>
+    <tr>
+      <td>required</td>
+      <td>This field is required.</td>
+    </tr>
+    <tr>
+      <td>email</td>
+      <td>Please enter a valid email address.</td>
+    </tr>
+    <tr>
+      <td>url</td>
+      <td>Please enter a valid URL.</td>
+    </tr>
+    <tr>
+      <td>number</td>
+      <td>Please enter a valid number.</td>
+    </tr>
+    <tr>
+      <td>digits</td>
+      <td>Please enter only digits.</td>
+    </tr>
+    <tr>
+      <td>min</td>
+      <td>Please enter a value greater than or equal to <strong>{{validValue}}</strong>.</td>
+    </tr>
+    <tr>
+      <td>max</td>
+      <td>Please enter a value less than or equal to <strong>{{validValue}}</strong>.</td>
+    </tr>
+    <tr>
+      <td>length</td>
+      <td>Please enter all <strong>{{validValue}}</strong> characters.</td>
+    </tr>
+    <tr>
+      <td>minlength</td>
+      <td>Please enter at least <strong>{{validValue}}</strong> characters.</td>
+    </tr>
+    <tr>
+      <td>maxlength</td>
+      <td>Please enter no more than <strong>{{validValue}}</strong> characters.</td>
+    </tr>
+    <tr>
+      <td>editable</td>
+      <td>Please select a value from dropdown.</td>
+    </tr>
+    <tr>
+      <td>pattern</td>
+      <td>Please fix the pattern.</td>
+    </tr>
+    <tr>
+      <td>equalTo</td>
+      <td>Please enter the same <strong>{{matchName}}</strong> again.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Manually showing/hiding the validation state</h2>
+
+<p>
+  Each <strong>ngModelController</strong> &amp; <strong>formController</strong> having a utility method to manually
+  show/hide the validation which is helpful at certain cases. To show validation message, use
+  <strong class="pl-s">$showValidation()</strong> and to hide validation messgae, use
+  <strong class="pl-s">$hideValidation()</strong> method.
+</p>
+
+<codepen pen-id="EyQYXz" height="500"></codepen>
+
+<h2>Using tooltip instead</h2>
+
+<p>
+  All the above example uses the <strong>simple</strong> mechanism of displaying error messages. This module supports
+  additional option to display error messages as <strong>tooltip</strong>.
+</p>
+
+<p>
+  This module has a dependency over the Angular's <a href="http://angular-ui.github.io/bootstrap/">ui-bootstrap</a>
+  library. To be more specific, only <strong class="pl-s">$uibPosition</strong> service is required to display the
+  tooltip. Checkout the example below:
+</p>
+
+<codepen pen-id="pbazdO" height="550"></codepen>
+
+<p>
+  All the above configuration will also be applicable for the tooltip based error messages. The default position of
+  the tooltip is set to <strong>bottom-left</strong>. Which can be customized globally as well as per form/input
+  element. Look at the below example to see customization.
+</p>
+
+<codepen pen-id="rLJBAP" height="650"></codepen>
+
+<ul>
+  <li>
+    Display type can be configured per specific input element or to specific form using
+    <strong class="pl-s">bs-display-error-as="tooltip"</strong> or <strong class="pl-s">bs-display-error-as="simple"</strong>
+  </li>
+
+  <li>
+    If using tooltip type error display, the tooltip placement can be configured per specific input element or to
+    specific form using <strong class="pl-s">bs-tooltip-placement="right"</strong>. Placement values can be one of the
+    following as specified in the <a href="http://angular-ui.github.io/bootstrap/#/position">docs</a>:<br>
+
+    <ul>
+      <li>top: element on top, horizontally centered on host element.</li>
+      <li>top-left: element on top, left edge aligned with host element left edge.</li>
+      <li>top-right: element on top, right edge aligned with host element right edge.</li>
+      <li>bottom: element on bottom, horizontally centered on host element.</li>
+      <li>bottom-left: element on bottom, left edge aligned with host element left edge.</li>
+      <li>bottom-right: element on bottom, right edge aligned with host element right edge.</li>
+      <li>left: element on left, vertically centered on host element.</li>
+      <li>left-top: element on left, top edge aligned with host element top edge.</li>
+      <li>left-bottom: element on left, bottom edge aligned with host element bottom edge.</li>
+      <li>right: element on right, vertically centered on host element.</li>
+      <li>right-top: element on right, top edge aligned with host element top edge.</li>
+      <li>right-bottom: element on right, bottom edge aligned with host element bottom edge.</li>
+      <li>auto: automatically find the best fit for the placement.</li>
+    </ul>
+  </li>
+</ul>
