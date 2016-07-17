@@ -11,8 +11,8 @@ angular.module('bsValidationApp')
           templateUrl: 'views/home.html'
         })
 
-        .when('/docs', {
-          templateUrl: 'views/documentations.html'
+        .when('/how-it-works', {
+          templateUrl: 'views/how-it-works.html'
         })
 
         .otherwise('/');
@@ -32,10 +32,11 @@ angular.module('bsValidationApp').directive('codepen', ['$interpolate', '$sce', 
     },
     link: function($scope, $element, $attr) {
       $scope.height = $attr.height || 300;
-      $scope.themeId = $attr.themeId || 'light';
+      $scope.themeId = $attr.themeId || 'default';
       $scope.penId = $attr.penId;
+      $scope.defaultTab = $attr.defaultTab || 'result';
 
-      var src = '//codepen.io/shashank-agrawal/embed/{{::penId}}/?height={{::height}}&theme-id={{::themeId}}&default-tab=result&embed-version=2';
+      var src = '//codepen.io/shashank-agrawal/embed/{{::penId}}/?height={{::height}}&theme-id={{::themeId}}&default-tab={{::defaultTab}}&embed-version=2';
       src = $interpolate(src)($scope);
       $scope.src = $sce.trustAsResourceUrl(src);
     }
