@@ -29,7 +29,6 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             var shouldValidateOnDisplay = validationConfig.shouldValidateOnDisplay();
             var shouldValidateOnSubmit = validationConfig.shouldValidateOnSubmit();
 
-            var metaInformation = validationService.getMetaInformation($element);
             var displayErrorAs = validationService.displayErrorPreference($element, $attr);
             var validationMessageService = validationService.getValidationMessageService(displayErrorAs);
 
@@ -37,7 +36,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             angular.forEach(validationService.getValidators(), function(key) {
               var attrValue = $element.attr(key);
               if ($attr[key] || (angular.isDefined(attrValue) && attrValue !== false)) {
-                validationService.addValidator($scope, $attr, ngModelController, key, metaInformation);
+                validationService.addValidator($scope, $attr, ngModelController, key);
               }
             });
 

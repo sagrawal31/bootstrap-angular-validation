@@ -26,7 +26,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     maxlength: 'Please enter no more than {{validValue}} characters.',
     editable: 'Please select a value from dropdown.',
     pattern: 'Please fix the pattern.',
-    equalto: 'must match {{matchName}}.'
+    equalto: 'Value must match {{matchName}}.'
   };
 
   var ngIncludedURLs = [];
@@ -36,7 +36,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       return (/^\d+$/).test(value);
     },
     equalto: function(value, $scope, attr) {
-      return value + '' === attr.equalto + '';
+      return value + '' === $scope.$eval(attr.equalto) + '';
     },
     number: function(value) {
       return (/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/).test(value);
@@ -64,6 +64,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
   });
 
   var selector = selectors.join(',');
+  var meta = ['matchName'];
 
   return {
     /**
@@ -76,15 +77,11 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       return builtIn.concat(additional);
     },
 
-    getMeta: function() {
-      return ['matchName'];
-    },
-
     getMetaInformation: function($element) {
       var metaInformation = {};
 
-      angular.forEach(this.getMeta(), function(key) {
-        metaInformation[key] = $element.attr(key);
+      angular.forEach(meta, function(key) {
+        metaInformation[key] = $element.attr(key) || $element.attr(key.camelCaseToDash());
       });
 
       return metaInformation;
@@ -140,9 +137,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
         var $parentForm = $element.parents('form');
 
         // .attr() method not accepting camelCase version of the attribute name. Converting it to dashed-case
-        attrName = attrName.replace(/([A-Z])/g, function($1) {
-          return '-' + $1.toLowerCase();
-        });
+        attrName = attrName.camelCaseToDash();
 
         if ($parentForm && $parentForm.attr(attrName)) {
           return $parentForm.attr(attrName);

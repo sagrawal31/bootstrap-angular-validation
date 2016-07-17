@@ -58,3 +58,11 @@ if (!window.jQuery && !angular.element.prototype.parents) {
     return angular.element(parents);
   };
 }
+
+if (!String.prototype.camelCaseToDash) {
+  String.prototype.camelCaseToDash = function() {
+    return this.replace(/([A-Z])/g, function($1) {
+      return '-' + $1.toLowerCase();
+    });
+  };
+}
