@@ -11,7 +11,7 @@
 
 <codepen pen-id="akEXbr" default-tab="html" height="650"></codepen>
 
-<h2>The <strong>.form-group</strong> parent element</h2>
+<h2 id="form-group-class">The <strong>.form-group</strong> parent element</h2>
 
 <p>
   In the above example, all the input fields are properly written using Bootstrap's guideline i.e. each input field
@@ -20,7 +20,7 @@
   <strong class="pl-s">.has-error</strong> class to that element.
 </p>
 
-<h2>The <strong>bs-form-group</strong> parent element directive</h2>
+<h2 class="bs-form-group">The <strong>bs-form-group</strong> parent element directive</h2>
 
 <p>
   If your form is designed in a different way which does not use the <strong class="pl-s">.form-group</strong> as a
@@ -29,7 +29,7 @@
   class="pl-s">bs-form-group</span> is a parent for this input element.
 </p>
 
-<h2>The <strong>bs-validation</strong> directive</h2>
+<h2 id="bs-validation">The <strong>bs-validation</strong> directive</h2>
 
 <p>
   Another important thing to note here that all the input elements which requires validation must have
@@ -45,7 +45,7 @@
   <i>Continue reading..</i>
 </p>
 
-<h2>The <strong>form</strong> directive</h2>
+<h2 class="form">The <strong>form</strong> directive</h2>
 
 <p>
   <strong class="pl-mq">That is the magic!</strong> If your all the input elements are wrapped inside a <strong
@@ -55,7 +55,7 @@
   adding this directive to all the input elements if you have say 30 input elements in a form.
 </p>
 
-<h2>Validation state</h2>
+<h2 id="validation-state">Validation state</h2>
 
 There are currently two types of validation state available:
 
@@ -94,7 +94,7 @@ There are currently two types of validation state available:
   this.
 </p>
 
-<h2>Events for validation state</h2>
+<h2 id="events">Events for validation state</h2>
 
 <p>
   The actual validation is handled by the Angular itself all the time. This module just displays the validation state
@@ -110,7 +110,7 @@ There are currently two types of validation state available:
 
 <p>Any combination of these events can be customized globally. Check the next section for the usage.</p>
 
-<h2>The validator</h2>
+<h2 id="validator">The validator</h2>
 
 <p>
   This module uses the <a href="https://code.angularjs.org/1.3.0/docs/api/ng/type/ngModel.NgModelController#$validators">
@@ -124,4 +124,10 @@ There are currently two types of validation state available:
   very common & useful validations. <a
   href="https://github.com/sagrawal14/bootstrap-angular-validation/blob/v1.0.0-RC1/src/services/validation.service.js#L34">here</a>
   are the list of extra validations which are available in this module.
+</p>
+
+<h2>Configuration & Examples</h2>
+
+<p>
+  <a href="#/customization-and-examples">Check out</a> guide for customizations and examples.
 </p>
