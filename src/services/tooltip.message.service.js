@@ -29,7 +29,7 @@ function($injector, validationService, $interpolate, $templateCache, validationC
     var html = $templateCache.get('bav/template/tooltip.html');
     html = $interpolate(html)(data);
 
-    if (validationConfig.appendToBody) {
+    if (validationConfig.tooltipAppendToBody) {
       angular.element(document.body).append(html);
     } else {
       $element.after(html);

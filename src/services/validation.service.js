@@ -26,7 +26,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     maxlength: 'Please enter no more than {{validValue}} characters.',
     editable: 'Please select a value from dropdown.',
     pattern: 'Please fix the pattern.',
-    equalto: 'Value must match {{matchName}}.'
+    equalto: 'Please enter the same {{matchName}} again.'
   };
 
   var ngIncludedURLs = [];
