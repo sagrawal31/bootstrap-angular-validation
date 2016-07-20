@@ -12,23 +12,6 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
   var customFormGroup = '[bs-form-group]';
   var formGroupClass = '.form-group';
 
-  var messages = {
-    required: 'This field is required.',
-    email: 'Please enter a valid email address.',
-    strictemail: 'Please enter a valid email address.',
-    url: 'Please enter a valid URL.',
-    number: 'Please enter a valid number.',
-    digits: 'Please enter only digits.',
-    min: 'Please enter a value greater than or equal to {{validValue}}.',
-    max: 'Please enter a value less than or equal to {{validValue}}.',
-    length: 'Please enter all {{validValue}} characters.',
-    minlength: 'Please enter at least {{validValue}} characters.',
-    maxlength: 'Please enter no more than {{validValue}} characters.',
-    editable: 'Please select a value from dropdown.',
-    pattern: 'Please fix the pattern.',
-    equalto: 'Please enter the same {{matchName}} again.'
-  };
-
   var ngIncludedURLs = [];
 
   var genericValidators = {
@@ -148,10 +131,6 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       return validationConfig.getDisplayErrorsAs();
     },
 
-    getDefaultMessage: function(key) {
-      return messages[key];
-    },
-
     getErrorMessage: function($element, $attr, ngModelController) {
       var firstErrorKey = Object.keys(ngModelController.$error)[0];
       return validationConfig.getErrorMessagePrefix() + this.resolveMessage($element, $attr, firstErrorKey);
@@ -199,7 +178,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
 
     resolveMessage: function($element, $attr, key) {
       var metaInformation = this.getMetaInformation($element);
-      var message = $element.attr(key + '-notification') || this.getDefaultMessage(key);
+      var message = $element.attr(key + '-notification') || validationConfig.messages[key];
 
       var matchers = angular.extend({}, {validValue: $attr[key]}, metaInformation);
       return $interpolate(message)(matchers);
