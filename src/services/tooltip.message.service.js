@@ -54,6 +54,13 @@ function($injector, validationService, $interpolate, $templateCache, validationC
   }
 
   return {
+    destroyMessage: function($element) {
+      if (validationConfig.tooltipAppendToBody) {
+        // If tooltip messages were appended to body then remove them
+        getErrorTooltip($element).remove();
+      }
+    },
+
     hideErrorMessage: function($element, $formGroupElement) {
       validationService.removeErrorClass($formGroupElement);
       getErrorTooltip($element).removeClass('in');

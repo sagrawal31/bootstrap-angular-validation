@@ -24,6 +24,23 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
   this.global.tooltipPlacement = 'bottom-left';
   this.global.tooltipAppendToBody = false;
 
+  this.global.messages = {
+    required: 'This field is required.',
+    email: 'Please enter a valid email address.',
+    strictemail: 'Please enter a valid email address.',
+    url: 'Please enter a valid URL.',
+    number: 'Please enter a valid number.',
+    digits: 'Please enter only digits.',
+    min: 'Please enter a value greater than or equal to {{validValue}}.',
+    max: 'Please enter a value less than or equal to {{validValue}}.',
+    length: 'Please enter all {{validValue}} characters.',
+    minlength: 'Please enter at least {{validValue}} characters.',
+    maxlength: 'Please enter no more than {{validValue}} characters.',
+    editable: 'Please select a value from dropdown.',
+    pattern: 'Please fix the pattern.',
+    equalto: 'Please enter the same {{matchName}} again.'
+  };
+
   this.global.setValidateFieldsOn = function(event) {
     if (!event) {
       throw 'Please provide an string or list of events to validate fields on';
@@ -46,6 +63,7 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
 
   this.$get = [function() {
     return {
+      messages: _this.global.messages,
       errorClass: _this.global.errorClass,
       successClass: _this.global.successClass,
       tooltipAppendToBody: _this.global.tooltipAppendToBody,

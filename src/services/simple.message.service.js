@@ -25,6 +25,10 @@ angular.module('bootstrap.angular.validation').factory('simpleMessageService', [
   }
 
   return {
+    destroyMessage: function() {
+      // Need not to do anything. Error elements will be automcatically removed on DOM unload
+    },
+
     hideErrorMessage: function($element, $formGroupElement) {
       validationService.removeErrorClass($formGroupElement);
       $formGroupElement.find(errorElementClass).addClass('ng-hide');

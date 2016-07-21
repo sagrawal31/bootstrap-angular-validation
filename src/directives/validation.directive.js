@@ -125,6 +125,10 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
               displayValidationState = data.showValidationState;
               displayOrHideValidationState();
             });
+
+            $scope.$on('$destroy', function() {
+              validationMessageService.destroyMessage($element);
+            });
             
             ngModelController.$showValidation = showValidation;
             ngModelController.$hideValidation = hideValidation;
