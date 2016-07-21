@@ -21,6 +21,10 @@ Bootstrap's [form validation classes](http://getbootstrap.com/css/#forms-control
 
 2. IE 8 & below are not supported.
 
+## Change Log
+
+See [Releases](https://github.com/sagrawal14/bootstrap-angular-validation/releases) for changes.
+
 ## Usage
 
 ### 1. Install via Bower
