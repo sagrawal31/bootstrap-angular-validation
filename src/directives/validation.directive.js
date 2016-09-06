@@ -12,15 +12,19 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
     function($timeout, $injector, validationService) {
       return {
           restrict: 'A',
-          require: ['ngModel', '?^^form'],
+          require: ['?ngModel', '?^^form'],
           link: function($scope, $element, $attr, controllers) {
-            if ($attr.hasOwnProperty('bsNoValidation')) {
+            if (validationService.isValidationDisabled($element)) {
               return;
             }
 
-            // initialize controllers
+            // Initialize controllers
             var ngModelController = controllers[0];
             var ngFormController = controllers[1];
+
+            if (!ngModelController) {
+              throw 'ng-model directive is required for the bs-validation directive to work.';
+            }
 
             var $formGroupElement = validationService.getFormGroupElement($element);
             if (!$formGroupElement) {

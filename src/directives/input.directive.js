@@ -1,13 +1,14 @@
 'use strict';
 
 (function () {
-  var directiveFunction = ['bsValidationDirective', function (bsValidationDirective) {
+  var directiveFunction = ['bsValidationDirective', 'BsValidationService', function (bsValidationDirective, validationService) {
+
     return {
       restrict: 'E',
-      require: ['?ngModel', '?^^form'],
+      require: bsValidationDirective[0].require,
       compile: function ($element, $attr) {
         // Do not add validation directive if an attribute "bs-no-validation" is present
-        if ($attr.hasOwnProperty('bsNoValidation')) {
+        if (validationService.isValidationDisabled($element)) {
           return;
         }
 

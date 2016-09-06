@@ -150,6 +150,16 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       return validationMessageService;
     },
 
+    isValidationDisabled: function($element) {
+      var attribute = 'bs-no-validation';
+      if ($element[0].attributes.hasOwnProperty(attribute)) {
+        return true;
+      }
+
+      var $parentForm = $element.parents('form');
+      return $parentForm && $parentForm[0].attributes.hasOwnProperty(attribute);
+    },
+
     removeErrorClass: function($formGroupElement) {
       $formGroupElement.removeClass(validationConfig.errorClass);
     },
