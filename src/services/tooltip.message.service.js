@@ -79,7 +79,7 @@ function($injector, validationService, $interpolate, $templateCache, validationC
       $errorTooltip.css({ top: ttPosition.top + 'px', left: ttPosition.left + 'px' });
       $errorTooltip.addClass('in');
 
-      if (!$errorTooltip.hasClass(ttPosition.placement.split('-')[0])) {
+      if (ttPosition.placement && !$errorTooltip.hasClass(ttPosition.placement.split('-')[0])) {
         $errorTooltip.addClass(ttPosition.placement.split('-')[0]);
       }
 
