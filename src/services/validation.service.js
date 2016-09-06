@@ -172,6 +172,13 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       var metaInformation = this.getMetaInformation($element);
       var message = $element.attr(key + '-notification') || validationConfig.messages[key];
 
+      if (!message) {
+        console.warn('No message found for the key [' + key + ']. Consider adding a global message or element' +
+          ' specific message using attribute [' + key + '-notification="My custom message"]');
+
+        message = 'Please fix this field';
+      }
+
       var matchers = angular.extend({}, {validValue: $attr[key]}, metaInformation);
       return $interpolate(message)(matchers);
     },
