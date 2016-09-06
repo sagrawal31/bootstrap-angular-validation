@@ -8,13 +8,16 @@
  * @requires BsValidationService
 */
 angular.module('bootstrap.angular.validation').directive('bsValidation', [
-  '$timeout', '$injector', 'BsValidationService', 'bsValidationConfig',
-
-    function($timeout, $injector, validationService, validationConfig) {
+  '$timeout', '$injector', 'BsValidationService',
+    function($timeout, $injector, validationService) {
       return {
           restrict: 'A',
           require: ['ngModel', '?^^form'],
           link: function($scope, $element, $attr, controllers) {
+            if ($attr.hasOwnProperty('bsNoValidation')) {
+              return;
+            }
+
             // initialize controllers
             var ngModelController = controllers[0];
             var ngFormController = controllers[1];
@@ -25,9 +28,9 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             }
 
             var displayValidationState = false;
-            var shouldValidateOnBlur = validationConfig.shouldValidateOnBlur();
-            var shouldValidateOnDisplay = validationConfig.shouldValidateOnDisplay();
-            var shouldValidateOnSubmit = validationConfig.shouldValidateOnSubmit();
+            var shouldValidateOnBlur = validationService.shouldValidateOnBlur($element);
+            var shouldValidateOnDisplay = validationService.shouldValidateOnDisplay($element);
+            var shouldValidateOnSubmit = validationService.shouldValidateOnSubmit($element);
 
             var displayErrorAs = validationService.displayErrorPreference($element, $attr);
             var validationMessageService = validationService.getValidationMessageService(displayErrorAs);
@@ -118,8 +121,8 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
 
             // TODO Find alternative for this watch
             $scope.$watch(function() {
-              return ngModelController.$viewValue + ngModelController.$modelValue;
-            }, displayOrHideValidationState);
+              return ngModelController.$error;
+            }, displayOrHideValidationState, true);
 
             $scope.$on('onBsValidationStateChange', function(e, data) {
               displayValidationState = data.showValidationState;

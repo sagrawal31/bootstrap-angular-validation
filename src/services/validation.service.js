@@ -38,6 +38,21 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     }
   };
 
+  function getTrigger($element, triggerEvent) {
+    var attributeName = 'bs-trigger';
+    if ($element.attr(attributeName)) {
+      return $element.attr(attributeName) === triggerEvent;
+    }
+
+    var parentForm = $element.parents('form');
+    if (parentForm && parentForm.attr(attributeName)) {
+      return parentForm.attr(attributeName) === triggerEvent;
+    }
+
+    // Use the global config
+    return validationConfig.shouldValidateOn(triggerEvent);
+  }
+
   var selectors = [];
   var elements = ['input', 'select', 'textarea'];
 
@@ -182,6 +197,18 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
 
       var matchers = angular.extend({}, {validValue: $attr[key]}, metaInformation);
       return $interpolate(message)(matchers);
+    },
+
+    shouldValidateOnBlur: function($element) {
+      return getTrigger($element, 'blur');
+    },
+
+    shouldValidateOnDisplay: function($element) {
+      return getTrigger($element, 'display');
+    },
+
+    shouldValidateOnSubmit: function($element) {
+      return getTrigger($element, 'submit');
     }
 
   };

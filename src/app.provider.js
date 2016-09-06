@@ -84,17 +84,7 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
         return _this.global.addSuccessClass;
       },
 
-      shouldValidateOnBlur: function() {
-        return shouldValidateOn('blur');
-      },
-
-      shouldValidateOnSubmit: function() {
-        return shouldValidateOn('submit');
-      },
-
-      shouldValidateOnDisplay: function() {
-        return shouldValidateOn('display');
-      }
+      shouldValidateOn: shouldValidateOn
     };
   }];
 });
