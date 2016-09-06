@@ -11,7 +11,6 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
-  var intercetorFile = '<%=yeoman.src %>/app.interceptor.js';
   var tooltipFile = '<%=yeoman.src %>/services/tooltip.message.service.js';
   var simpleFile = '<%=yeoman.src %>/services/simple.message.service.js';
 
@@ -28,10 +27,8 @@ module.exports = function (grunt) {
             '<%=yeoman.src %>/app.js',
             '<%=yeoman.src %>/**/*.js',
             ('!' + simpleFile),
-            ('!' + tooltipFile),
-            ('!' + intercetorFile)
+            ('!' + tooltipFile)
           ],
-          '<%=yeoman.dist %>/bootstrap-angular-validation-interceptor.min.js': intercetorFile,
           '<%=yeoman.dist %>/bootstrap-angular-validation-simple.min.js': simpleFile,
           '<%=yeoman.dist %>/bootstrap-angular-validation-tooltip.min.js': tooltipFile
         }

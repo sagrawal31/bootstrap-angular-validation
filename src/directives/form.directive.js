@@ -3,45 +3,19 @@
 /**
  * @ngdoc directive
  * @name form
- * @requires $parse
- * @requires $rootScope
- *
- * @description
- * Using form element as directive, we don't require to put the 'bs-validation' directive to every form element.
- * To add handler on submit, use <code>on-submit</code> instead of <code>ng-submit</code>,
- * since ng-submit directive doesn't cares about validation errors.
+ * @description Using "form" element as directive so we don't require to put the "bs-validation" directive to every form
+ * element.
  */
 angular.module('bootstrap.angular.validation').directive('form', [
   '$parse',
-  '$rootScope',
-  'BsValidationService',
-  function($parse, $rootScope, bsValidationService) {
+  function($parse) {
     return {
       restrict: 'E',
       require: 'form',
-      priority: 1000,     // Setting a higher priority so that, this directive compiles first.
+      priority: 1000,     // Setting a higher priority so that this directive compiles first.
       compile: function($formElement, $formAttributes) {
           // Disable HTML5 validation display
           $formElement.attr('novalidate', 'novalidate');
-          bsValidationService.addDirective($formElement);
-
-          /**
-           * If there is an 'ng-include' directive available inside a form then the 'bs-validation' directive
-           * won't get applied until Angular resolves the view sourced by 'ng-include'.
-           */
-          var nestedNgIncludeElement = $formElement.find('[ng-include]');
-          if (nestedNgIncludeElement.length > 0) {
-            var src = $parse(nestedNgIncludeElement.attr('ng-include'))();
-
-            /**
-             * Then add the source URL of ng-include to a list so that in the response interceptor, we can add
-             * the 'bs-validation' directive. We can do this by recompiling here the content after the content is
-             * loaded but that leads to some problem and also increases the rendering time.
-             *
-             * @see response interceptor in app.js
-             */
-            bsValidationService.addToNgIncludedURLs(src);
-          }
 
           var ngSubmit = $formAttributes.ngSubmit;
           /*

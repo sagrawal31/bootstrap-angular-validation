@@ -12,8 +12,6 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
   var customFormGroup = '[bs-form-group]';
   var formGroupClass = '.form-group';
 
-  var ngIncludedURLs = [];
-
   var genericValidators = {
     digits: function(value) {
       return (/^\d+$/).test(value);
@@ -53,15 +51,6 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     return validationConfig.shouldValidateOn(triggerEvent);
   }
 
-  var selectors = [];
-  var elements = ['input', 'select', 'textarea'];
-
-  angular.forEach(elements, function(element) {
-    selectors.push(element + '[ng-model]');
-    selectors.push(element + '[data-ng-model]');
-  });
-
-  var selector = selectors.join(',');
   var meta = ['matchName'];
 
   return {
@@ -85,12 +74,6 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       return metaInformation;
     },
 
-    addDirective: function($element) {
-      var validateableElements = $element.find(selector);
-      validateableElements.attr('bs-validation', '');
-      return validateableElements;
-    },
-
     addErrorClass: function($formGroupElement) {
       this.removeErrorClass($formGroupElement);
       $formGroupElement.addClass(validationConfig.errorClass);
@@ -104,27 +87,11 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       }
     },
 
-    addToNgIncludedURLs: function(url) {
-      if (ngIncludedURLs.indexOf(url) === -1) {
-        ngIncludedURLs.push(url);
-      }
-    },
-
     addValidator: function($scope, $attr, ngModelController, validatorKey) {
       ngModelController.$validators[validatorKey] = function(modelValue, viewValue) {
         var value = modelValue || viewValue;
         return ngModelController.$isEmpty(value) || genericValidators[validatorKey](value, $scope, $attr);
       };
-    },
-
-    checkNgIncludedURL: function(url) {
-      var index = ngIncludedURLs.indexOf(url);
-      if (index > -1) {
-        ngIncludedURLs.splice(index, 1);
-        return true;
-      }
-
-      return false;
     },
 
     displayErrorPreference: function($element, $attr) {
