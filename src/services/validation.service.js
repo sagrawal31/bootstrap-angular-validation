@@ -157,7 +157,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       }
 
       var $parentForm = $element.parents('form');
-      return $parentForm && $parentForm[0].attributes.hasOwnProperty(attribute);
+      return $parentForm[0] && $parentForm[0].attributes.hasOwnProperty(attribute);
     },
 
     removeErrorClass: function($formGroupElement) {
