@@ -39,8 +39,6 @@ angular.module('bootstrap.angular.validation').directive('form', [
             };
 
             formElement.on('submit', function(e) {
-              e.preventDefault();
-
               // If any of the form element has not passed the validation
               if (formController.$invalid) {
                 // Then focus the first invalid element
@@ -70,8 +68,8 @@ angular.module('bootstrap.angular.validation').directive('form', [
                *
                * https://api.jquery.com/event.stopimmediatepropagation/
                */
-              e.stopImmediatePropagation();
-              return false;
+              //e.stopImmediatePropagation();
+              return true;
             });
           };
 
