@@ -7,13 +7,17 @@
  * element.
  */
 angular.module('bootstrap.angular.validation').directive('form', [
-  '$parse',
-  function($parse) {
+  '$parse', 'BsValidationService',
+  function($parse, validationService) {
     return {
       restrict: 'E',
       require: 'form',
       priority: 1000,     // Setting a higher priority so that this directive compiles first.
       compile: function($formElement, $formAttributes) {
+          if (validationService.isValidationDisabled($formElement)) {
+            return;
+          }
+
           // Disable HTML5 validation display
           $formElement.attr('novalidate', 'novalidate');
 
@@ -38,6 +42,8 @@ angular.module('bootstrap.angular.validation').directive('form', [
               $scope.$broadcast('onBsValidationStateChange', {showValidationState: false});
             };
 
+            var markPristineAfterSubmit = formElement[0].attributes.hasOwnProperty('bs-pristine-on-submit');
+
             formElement.on('submit', function(e) {
               // If any of the form element has not passed the validation
               if (formController.$invalid) {
@@ -54,21 +60,23 @@ angular.module('bootstrap.angular.validation').directive('form', [
                 formController.$commitViewValue();
                 formController.$setSubmitted();
 
-                /*
-                 * Do not show validation errors once the form gets submitted. You can still display the
-                 * validation errors after form submission by calling '$setSubmitted' in your form controller.
-                 */
-                formController.$hideValidation();
+                if (markPristineAfterSubmit) {
+                  formController.$hideValidation();
+                }
               });
 
-              /**
-               * Prevent other submit event listener registered via Angular so that we can mark the form with
-               * the pristine state. Otherwise, that Angular's listener is getting called at the last and is again
-               * setting form to the submitted.
-               *
-               * https://api.jquery.com/event.stopimmediatepropagation/
-               */
-              //e.stopImmediatePropagation();
+              if (markPristineAfterSubmit) {
+                /**
+                 * Prevent other submit event listener registered via Angular so that we can mark the form with
+                 * the pristine state. Otherwise, that Angular's listener is getting called at the last and is again
+                 * setting form to the submitted.
+                 *
+                 * https://api.jquery.com/event.stopimmediatepropagation/
+                 */
+                e.stopImmediatePropagation();
+                e.preventDefault();
+              }
+
               return true;
             });
           };
