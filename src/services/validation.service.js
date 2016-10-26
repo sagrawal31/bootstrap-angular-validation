@@ -75,7 +75,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     },
 
     addErrorClass: function($formGroupElement) {
-      this.removeErrorClass($formGroupElement);
+      this.removeSuccessClass($formGroupElement);
       $formGroupElement.addClass(validationConfig.errorClass);
     },
 
