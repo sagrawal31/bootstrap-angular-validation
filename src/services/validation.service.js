@@ -12,29 +12,58 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
   var customFormGroup = '[bs-form-group]';
   var formGroupClass = '.form-group';
 
-  var genericValidators = {
-    digits: function(value) {
+  var _genericValidators = [{
+    name: 'digits',
+    validateFn: function(value) {
       return (/^\d+$/).test(value);
     },
-    equalto: function(value, $scope, attr) {
+    class: ''
+  }, {
+    name: 'equalto',
+    validateFn: function(value, $scope, attr) {
       return value + '' === $scope.$eval(attr.equalto) + '';
     },
-    number: function(value) {
+    class: ''
+  }, {
+    name: 'number',
+    validateFn: function(value) {
       return (/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/).test(value);
     },
-    min: function(value, $scope, attr) {
+    class: ''
+  }, {
+    name: 'min',
+    validateFn: function(value, $scope, attr) {
       return parseFloat(value) >= parseFloat(attr.min);
     },
-    max: function(value, $scope, attr) {
+    class: ''
+  }, {
+    name: 'max',
+    validateFn: function(value, $scope, attr) {
       return parseFloat(value) <= parseFloat(attr.max);
     },
-    length: function(value, $scope, attr) {
+    class: ''
+  }, {
+    name: 'length',
+    validateFn: function(value, $scope, attr) {
       return value.length === parseInt(attr.length);
     },
-    strictemail: function(value) {
+    class: ''
+  }, {
+    name: 'strictemail',
+    validateFn: function(value) {
       return new RegExp(/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/).test(value);
+    },
+    class: ''
+  }];
+
+  function getValidator(name) {
+    for (var i = 0; i < _genericValidators.length; i++) {
+      if (name === _genericValidators[i].name) {
+        return _genericValidators[i];
+      }
     }
-  };
+    return null;
+  }
 
   function getTrigger($element, triggerEvent) {
     var attributeName = 'bs-trigger';
@@ -59,9 +88,11 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
      * need not a add it for every form element.
      */
     getValidators: function() {
-      var builtIn = ['equalto', 'min', 'max', 'number', 'digits', 'length'];
-      var additional = Object.keys(genericValidators);
-      return builtIn.concat(additional);
+      var validatorNames = [];
+      for (var i = 0; i < _genericValidators; i++) {
+        validatorNames.push(_genericValidators[i].name);
+      }
+      return validatorNames;
     },
 
     getMetaInformation: function($element) {
@@ -87,11 +118,32 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       }
     },
 
-    addValidator: function($scope, $attr, ngModelController, validatorKey) {
+    addValidator: function($scope, $element, $attr, ngModelController, validatorKey) {
       ngModelController.$validators[validatorKey] = function(modelValue, viewValue) {
         var value = modelValue || viewValue;
-        return ngModelController.$isEmpty(value) || genericValidators[validatorKey](value, $scope, $attr);
+        if (!ngModelController.$isEmpty(value)) {
+          var validator = getValidator(name);
+          var validationResult = validator.validateFn(value, $scope, $attr);
+
+          if (validationResult) {
+            $element.removeClass(validator.class);
+          } else {
+            $element.addClass(validator.class);
+          }
+
+          return validationResult;
+        }
+
+        return true;
       };
+    },
+
+    addCustomValidator: function(name, validateFn, cssClass) {
+        _genericValidators.push({
+          name: name,
+          validateFn: validateFn,
+          class: cssClass
+        });
     },
 
     displayErrorPreference: function($element, $attr) {
