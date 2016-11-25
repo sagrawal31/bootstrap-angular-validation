@@ -43,7 +43,7 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             angular.forEach(validationService.getValidators(), function(key) {
               var attrValue = $element.attr(key);
               if ($attr[key] || (angular.isDefined(attrValue) && attrValue !== false)) {
-                validationService.addValidator($scope, $attr, ngModelController, key);
+                validationService.addValidator($scope, $element, $attr, ngModelController, key);
               }
             });
 
