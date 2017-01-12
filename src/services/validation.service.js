@@ -6,7 +6,7 @@
  * @description Core service of this module to provide various default validations.
  */
 angular.module('bootstrap.angular.validation').factory('BsValidationService', ['$interpolate', 'bsValidationConfig',
-'$injector', function($interpolate, validationConfig, $injector) {
+'$injector', '$filter', function($interpolate, validationConfig, $injector, $filter) {
 
   var displayErrorAsAttrName = 'bsDisplayErrorAs';
   var customFormGroup = '[bs-form-group]';
@@ -170,6 +170,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
 
     resolveMessage: function($element, $attr, key) {
       var metaInformation = this.getMetaInformation($element);
+      var messageFilters = $element.attr(key + '-notification-filter') || validationConfig.getMessageFilters();
       var message = $element.attr(key + '-notification') || validationConfig.messages[key];
 
       if (!message) {
@@ -177,6 +178,16 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
           ' specific message using attribute [' + key + '-notification="My custom message"]');
 
         message = 'Please fix this field';
+      }
+
+      if (angular.isDefined(messageFilters)) {
+        if (!angular.isArray(messageFilters)) {
+          messageFilters = [messageFilters];
+        }
+
+        for (var i = 0; i < messageFilters.length; i++) {
+          message = $filter(messageFilters[i])(message);
+        }
       }
 
       var matchers = angular.extend({}, {validValue: $attr[key]}, metaInformation);

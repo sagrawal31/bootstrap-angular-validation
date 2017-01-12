@@ -7,6 +7,10 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
   // Display the validation error message below the `input` field with class "help-block"
   var displayErrorsAs = 'simple';
 
+  // Can be a string or list of any combination of filters; will be applied in order
+  // For example: 'lowercase' or ['lowercase', 'reverse'] (So long as the filter(s) exists)
+  var messageFilters = [];
+
   function shouldValidateOn(event) {
     if (angular.isString(validateFieldsOn)) {
       return validateFieldsOn === event;
@@ -61,6 +65,22 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
     displayErrorsAs = type;
   };
 
+  this.global.useMessageFilters = function(filters) {
+      if (!filters) {
+          throw 'Please provide a string or list of filters to apply to messages';
+      }
+
+      if (!angular.isString(filters) && !angular.isArray(filters)) {
+          throw 'Filters should either be a string or a list';
+      }
+
+      messageFilters = filters;
+
+      if (!angular.isArray(messageFilters)) {
+          messageFilters = [messageFilters];
+      }
+  };
+
   this.$get = [function() {
     return {
       messages: _this.global.messages,
@@ -74,6 +94,10 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
 
       getErrorMessagePrefix: function() {
         return _this.global.errorMessagePrefix || '';
+      },
+
+      getMessageFilters: function () {
+        return messageFilters;
       },
 
       getTooltipPlacement: function() {
