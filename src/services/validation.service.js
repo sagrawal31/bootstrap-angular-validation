@@ -186,13 +186,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
         }
 
         for (var i = 0; i < messageFilters.length; i++) {
-          var filter = $filter(messageFilters[i]);
-
-          if (!angular.isDefined(filter) || filter === null) {
-            throw 'The specified message filter \'' + messageFilters[i] + '\' does not exist.';
-          }
-
-          message = filter(message);
+          message = $filter(messageFilters[i])(message);
         }
       }
 
