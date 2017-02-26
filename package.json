@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-angular-validation",
-  "version": "1.0.5",
+  "version": "1.0.5-1",
   "dependencies": {},
   "devDependencies": {
     "grunt": "*",
