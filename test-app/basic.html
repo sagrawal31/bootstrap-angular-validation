@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic Bootstrap + Angular Validation</title>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
+</head>
+<body>
+    <div ng-app="bavApp" class="container" ng-controller="FooController">
+        <form class="form-horizontal" ng-submit="saveMe()">
+
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="inputEmail3" placeholder="Email" ng-model="email"
+                           required name="password">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+
+                <div class="col-sm-10">
+                    <input type="url" class="form-control" id="inputPassword3" placeholder="Password"
+                           ng-model="password" required="required" min="2" max="5" name="password">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Sign in</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../dist/bootstrap-angular-validation-all.min.js"></script>
+    <script>
+      var app = angular.module("bavApp", ["bootstrap.angular.validation"]);
+
+      app.controller("FooController", function ($scope) {
+        $scope.saveMe = function () {
+          alert("Thanks");
+        };
+      });
+    </script>
+</body>
+</html>

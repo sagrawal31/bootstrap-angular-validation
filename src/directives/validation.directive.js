@@ -40,10 +40,11 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             var validationMessageService = validationService.getValidationMessageService(displayErrorAs);
 
             // Register generic custom validators if added to element
-            angular.forEach(validationService.getValidators(), function(key) {
+            angular.forEach(validationService.getValidators(), function(validator) {
+              var key = validator.name;
               var attrValue = $element.attr(key);
               if ($attr[key] || (angular.isDefined(attrValue) && attrValue !== false)) {
-                validationService.addValidator($scope, $element, $attr, ngModelController, key);
+                validationService.addValidator($scope, $element, $attr, ngModelController, validator);
               }
             });
 
@@ -78,6 +79,8 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
             }
 
             function displayOrHideValidationState() {
+              validationService.toggleErrorKeyClasses($formGroupElement, ngModelController.$error);
+
               if (!displayValidationState) {
                 hideSuccess();
                 return hideError();
