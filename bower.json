@@ -1,7 +1,9 @@
 {
   "name": "bootstrap-angular-validation",
   "description": "Bootstrap form validation in Angular like jQuery but w/o jQuery.",
-  "main": "dist/bootstrap-angular-validation.min.js",
+  "main": [
+    "dist/bootstrap-angular-validation-all.min.js"
+  ],
   "dependencies": { },
   "devDependencies": {
     "angular": "^1.5.5"
@@ -15,6 +17,7 @@
     "**/.*",
     "node_modules",
     "bower_components",
+    "test-app",
     "src"
   ],
   "repository": {

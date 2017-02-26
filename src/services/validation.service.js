@@ -12,29 +12,42 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
   var customFormGroup = '[bs-form-group]';
   var formGroupClass = '.form-group';
 
-  var genericValidators = {
-    digits: function(value) {
+  var _genericValidators = [{
+    name: 'digits',
+    validateFn: function(value) {
       return (/^\d+$/).test(value);
-    },
-    equalto: function(value, $scope, attr) {
+    }
+  }, {
+    name: 'equalto',
+    validateFn: function(value, $scope, attr) {
       return value + '' === $scope.$eval(attr.equalto) + '';
-    },
-    number: function(value) {
+    }
+  }, {
+    name: 'number',
+    validateFn: function(value) {
       return (/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/).test(value);
-    },
-    min: function(value, $scope, attr) {
+    }
+  }, {
+    name: 'min',
+    validateFn: function(value, $scope, attr) {
       return parseFloat(value) >= parseFloat(attr.min);
-    },
-    max: function(value, $scope, attr) {
+    }
+  }, {
+    name: 'max',
+    validateFn: function(value, $scope, attr) {
       return parseFloat(value) <= parseFloat(attr.max);
-    },
-    length: function(value, $scope, attr) {
+    }
+  }, {
+    name: 'length',
+    validateFn: function(value, $scope, attr) {
       return value.length === parseInt(attr.length);
-    },
-    strictemail: function(value) {
+    }
+  }, {
+    name: 'strictemail',
+    validateFn: function(value) {
       return new RegExp(/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/).test(value);
     }
-  };
+  }];
 
   function getTrigger($element, triggerEvent) {
     var attributeName = 'bs-trigger';
@@ -51,17 +64,17 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     return validationConfig.shouldValidateOn(triggerEvent);
   }
 
+  function removeClassByPrefix(element, prefix) {
+    var regx = new RegExp('\\b' + prefix + '.*\\b', 'g');
+    element[0].className = element[0].className.replace(regx, '').replace(/\s\s+/g, ' ');
+    return element;
+  }
+
   var meta = ['matchName'];
 
   return {
-    /**
-     * Search all the input element inside the given DOM element and apply the 'bs-validation' directive so we
-     * need not a add it for every form element.
-     */
     getValidators: function() {
-      var builtIn = ['equalto', 'min', 'max', 'number', 'digits', 'length'];
-      var additional = Object.keys(genericValidators);
-      return builtIn.concat(additional);
+      return _genericValidators;
     },
 
     getMetaInformation: function($element) {
@@ -87,11 +100,30 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       }
     },
 
-    addValidator: function($scope, $attr, ngModelController, validatorKey) {
-      ngModelController.$validators[validatorKey] = function(modelValue, viewValue) {
+    addValidator: function($scope, $element, $attr, ngModelController, validator) {
+      ngModelController.$validators[validator.name] = function(modelValue, viewValue) {
         var value = modelValue || viewValue;
-        return ngModelController.$isEmpty(value) || genericValidators[validatorKey](value, $scope, $attr);
+        if (ngModelController.$isEmpty(value)) {
+          return true;
+        }
+
+        // See https://github.com/sagrawal14/angular-extras/blob/v0.1.3/src/extras/array.js#L91 for "find" function
+        return validator.validateFn(value, $scope, $attr);
       };
+    },
+
+    /**
+     * Add a custom validator to the list of generic validators.
+     * @param genericValidationObject for example, to a add a generic validator to accept either "foo" or "bar":
+     * {
+     *     name: 'foobar',
+     *     validateFn: function(value, $scope, attr) {
+     *         return value === 'foo' || value === 'bar';
+     *     }
+     * }
+     */
+    addGenericValidator: function(genericValidationObject) {
+        _genericValidators.push(genericValidationObject);
     },
 
     displayErrorPreference: function($element, $attr) {
@@ -204,6 +236,21 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
 
     shouldValidateOnSubmit: function($element) {
       return getTrigger($element, 'submit');
+    },
+
+    /**
+     * Add or remove various classes on form-group element. For example, if an input has two errors "required" & "min"
+     * then whenever the validation fails, form-group element will have classes like "bs-has-error-required" or
+     * "bs-has-error-min".
+     * @param $formGroupElement jQLite/jQuery form-group element
+     * @param errors Errors object as returned by ngModelController.$error
+     */
+    toggleErrorKeyClasses: function ($formGroupElement, errors) {
+      removeClassByPrefix($formGroupElement, 'bs-has-error-');
+
+      angular.forEach(errors, function (value, key) {
+        $formGroupElement.addClass('bs-has-error-' + key);
+      });
     }
 
   };
