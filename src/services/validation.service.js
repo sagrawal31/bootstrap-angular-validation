@@ -13,47 +13,47 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
   var formGroupClass = '.form-group';
 
   var _genericValidators = [{
-    name: "digits",
+    name: 'digits',
     validateFn: function(value) {
       return (/^\d+$/).test(value);
     },
-    class: ""
+    class: ''
   }, {
-    name: "equalto",
+    name: 'equalto',
     validateFn: function(value, $scope, attr) {
       return value + '' === $scope.$eval(attr.equalto) + '';
     },
-    class: ""
+    class: ''
   }, {
-    name: "number",
+    name: 'number',
     validateFn: function(value) {
       return (/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/).test(value);
     },
-    class: ""
+    class: ''
   }, {
-    name: "min",
+    name: 'min',
     validateFn: function(value, $scope, attr) {
       return parseFloat(value) >= parseFloat(attr.min);
     },
-    class: ""
+    class: ''
   }, {
-    name: "max",
+    name: 'max',
     validateFn: function(value, $scope, attr) {
       return parseFloat(value) <= parseFloat(attr.max);
     },
-    class: ""
+    class: ''
   }, {
-    name: "length",
+    name: 'length',
     validateFn: function(value, $scope, attr) {
       return value.length === parseInt(attr.length);
     },
-    class: ""
+    class: ''
   }, {
-    name: "strictemail",
+    name: 'strictemail',
     validateFn: function(value) {
       return new RegExp(/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/).test(value);
     },
-    class: ""
+    class: ''
   }];
 
   function getValidator(name) {
@@ -64,30 +64,6 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     }
     return null;
   }
-
-  var genericValidators = {
-    digits: function(value) {
-      return (/^\d+$/).test(value);
-    },
-    equalto: function(value, $scope, attr) {
-      return value + '' === $scope.$eval(attr.equalto) + '';
-    },
-    number: function(value) {
-      return (/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/).test(value);
-    },
-    min: function(value, $scope, attr) {
-      return parseFloat(value) >= parseFloat(attr.min);
-    },
-    max: function(value, $scope, attr) {
-      return parseFloat(value) <= parseFloat(attr.max);
-    },
-    length: function(value, $scope, attr) {
-      return value.length === parseInt(attr.length);
-    },
-    strictemail: function(value) {
-      return new RegExp(/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/).test(value);
-    }
-  };
 
   function getTrigger($element, triggerEvent) {
     var attributeName = 'bs-trigger';
@@ -151,8 +127,7 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
 
           if (validationResult) {
             $element.removeClass(validator.class);
-          }
-          else {
+          } else {
             $element.addClass(validator.class);
           }
 
@@ -164,7 +139,6 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
     },
 
     addCustomValidator: function(name, validateFn, cssClass) {
-      var
         _genericValidators.push({
           name: name,
           validateFn: validateFn,
