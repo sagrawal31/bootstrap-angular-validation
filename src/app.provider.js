@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('bootstrap.angular.validation').provider('bsValidationConfig', function() {
+angular.module('bootstrap.angular.validation').provider('bsValidationConfig', function () {
 
   // Can be a string or list of any combination of "blur", "submit" & "display"
   var validateFieldsOn = 'blur';
@@ -45,7 +45,7 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
     equalto: 'Please enter the same {{matchName}} again.'
   };
 
-  this.global.setValidateFieldsOn = function(event) {
+  this.global.setValidateFieldsOn = function (event) {
     if (!event) {
       throw 'Please provide an string or list of events to validate fields on';
     }
@@ -57,7 +57,7 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
     validateFieldsOn = event;
   };
 
-  this.global.setDisplayErrorsAs = function(type) {
+  this.global.setDisplayErrorsAs = function (type) {
     if (!type) {
       throw 'Please provide the way validation error should be displayed. In-built options are "simple" & "tooltip".';
     }
@@ -65,34 +65,34 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
     displayErrorsAs = type;
   };
 
-  this.global.useMessageFilters = function(filters) {
-      if (!filters) {
-          throw 'Please provide a string or list of filters to apply to messages';
-      }
+  this.global.useMessageFilters = function (filters) {
+    if (!filters) {
+      throw 'Please provide a string or list of filters to apply to messages';
+    }
 
-      if (!angular.isString(filters) && !angular.isArray(filters)) {
-          throw 'Filters should either be a string or a list';
-      }
+    if (!angular.isString(filters) && !angular.isArray(filters)) {
+      throw 'Filters should either be a string or a list';
+    }
 
-      messageFilters = filters;
+    messageFilters = filters;
 
-      if (!angular.isArray(messageFilters)) {
-          messageFilters = [messageFilters];
-      }
+    if (!angular.isArray(messageFilters)) {
+      messageFilters = [messageFilters];
+    }
   };
 
-  this.$get = [function() {
+  this.$get = [function () {
     return {
       messages: _this.global.messages,
       errorClass: _this.global.errorClass,
       successClass: _this.global.successClass,
       tooltipAppendToBody: _this.global.tooltipAppendToBody,
 
-      getDisplayErrorsAs: function() {
+      getDisplayErrorsAs: function () {
         return displayErrorsAs;
       },
 
-      getErrorMessagePrefix: function() {
+      getErrorMessagePrefix: function () {
         return _this.global.errorMessagePrefix || '';
       },
 
@@ -100,11 +100,11 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
         return messageFilters;
       },
 
-      getTooltipPlacement: function() {
+      getTooltipPlacement: function () {
         return _this.global.tooltipPlacement;
       },
 
-      shouldAddSuccessClass: function() {
+      shouldAddSuccessClass: function () {
         return _this.global.addSuccessClass;
       },
 
