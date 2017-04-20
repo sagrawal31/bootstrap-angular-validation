@@ -27,6 +27,7 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
   this.global.errorMessagePrefix = '';
   this.global.tooltipPlacement = 'bottom-left';
   this.global.tooltipAppendToBody = false;
+  this.global.suppressWarnings = false;
 
   this.global.messages = {
     required: 'This field is required.',
@@ -86,6 +87,7 @@ angular.module('bootstrap.angular.validation').provider('bsValidationConfig', fu
       messages: _this.global.messages,
       errorClass: _this.global.errorClass,
       successClass: _this.global.successClass,
+      suppressWarnings: _this.global.suppressWarnings,
       tooltipAppendToBody: _this.global.tooltipAppendToBody,
 
       getDisplayErrorsAs: function () {
