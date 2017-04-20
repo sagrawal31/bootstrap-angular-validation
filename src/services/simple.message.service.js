@@ -5,9 +5,20 @@ angular.module('bootstrap.angular.validation').factory('simpleMessageService', [
   var errorElementClass = '.bs-invalid-msg';
 
   function getErrorContainer($element, $formGroupElement) {
-    var $errorElement = $formGroupElement.find(errorElementClass);
-    if ($errorElement && $errorElement.length) {
-      return $errorElement;
+    var $errorContainer;
+
+    // If input element has "id" attribute
+    if ($element.attr('id')) {
+      // Then first try to find the error container with the same id prefixed with "bs-error-"
+      $errorContainer = $formGroupElement.find('#bs-error-' + $element.attr('id'));
+      if ($errorContainer && $errorContainer.length) {
+        return $errorContainer;
+      }
+    }
+
+    $errorContainer = $formGroupElement.find(errorElementClass);
+    if ($errorContainer && $errorContainer.length) {
+      return $errorContainer;
     }
 
     var insertAfter;
@@ -20,8 +31,15 @@ angular.module('bootstrap.angular.validation').factory('simpleMessageService', [
       insertAfter = $element;
     }
 
-    insertAfter.after('<span class="help-block ' + errorElementClass.substring(1) + '"></span>');
-    return $formGroupElement.find(errorElementClass);
+    var errorContainerHTML = '<span class="help-block ' + errorElementClass.substring(1) + '" ';
+    if ($element.attr('id')) {
+      errorContainerHTML += 'id="bs-error-' + $element.attr('id') + '"';
+    }
+    errorContainerHTML += '></span>';
+    $errorContainer = angular.element(errorContainerHTML);
+
+    insertAfter.after($errorContainer);
+    return $errorContainer;
   }
 
   return {
@@ -31,14 +49,16 @@ angular.module('bootstrap.angular.validation').factory('simpleMessageService', [
 
     hideErrorMessage: function ($element, $formGroupElement) {
       validationService.removeErrorClass($formGroupElement);
-      $formGroupElement.find(errorElementClass).addClass('ng-hide');
+
+      var $errorContainer = getErrorContainer($element, $formGroupElement);
+      $errorContainer.html('').addClass('ng-hide');
     },
 
     showErrorMessage: function ($element, $attr, ngModelController, $formGroupElement) {
       var message = validationService.getErrorMessage($element, $attr, ngModelController);
 
-      var $errorElement = getErrorContainer($element, $formGroupElement);
-      $errorElement.html(message).removeClass('ng-hide');
+      var $errorContainer = getErrorContainer($element, $formGroupElement);
+      $errorContainer.html(message).removeClass('ng-hide');
     }
   };
 }]);
