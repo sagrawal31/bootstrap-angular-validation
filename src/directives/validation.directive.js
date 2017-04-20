@@ -8,7 +8,8 @@
  * @requires BsValidationService
  */
 angular.module('bootstrap.angular.validation').directive('bsValidation', [
-  '$timeout', '$injector', 'BsValidationService', function ($timeout, $injector, validationService) {
+  '$timeout', '$injector', 'BsValidationService', 'bsValidationConfig',
+  function ($timeout, $injector, validationService, bsValidationConfig) {
     return {
       restrict: 'A',
       require: ['?ngModel', '?^^form'],
@@ -22,12 +23,18 @@ angular.module('bootstrap.angular.validation').directive('bsValidation', [
         var ngFormController = controllers[1];
 
         if (!ngModelController) {
-          throw 'ng-model directive is required for the bs-validation directive to work.';
+          if (!bsValidationConfig.suppressWarnings) {
+            console.warn('ng-model directive is required for the bs-validation directive to work.');
+          }
+          return;
         }
 
         var $formGroupElement = validationService.getFormGroupElement($element);
         if (!$formGroupElement) {
-          throw 'No parent form group element found for input element';
+          if (!bsValidationConfig.suppressWarnings) {
+            console.warn('No parent form group element found for input element');
+          }
+          return;
         }
 
         var displayValidationState = false;
