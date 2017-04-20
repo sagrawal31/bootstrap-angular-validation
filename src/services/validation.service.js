@@ -151,12 +151,12 @@ angular.module('bootstrap.angular.validation').factory('BsValidationService', ['
       },
 
       getFormGroupElement: function ($element) {
-        // Search parent element with class form-group to operate on.
-        var formGroupElement = $element.parents(formGroupClass);
+        // First search for an attribute with 'bs-form-group'
+        var formGroupElement = $element.parents(customFormGroup);
 
-        // Search for an attribute 'bs-form-group' if the class '.form-group' is not available
         if (!formGroupElement || formGroupElement.length === 0) {
-          formGroupElement = $element.parents(customFormGroup);
+          // Then search for parent element with class form-group
+          formGroupElement = $element.parents(formGroupClass);
 
           if (!formGroupElement || formGroupElement.length === 0) {
             return null;
