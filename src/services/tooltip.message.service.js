@@ -63,7 +63,9 @@ angular.module('bootstrap.angular.validation').factory('tooltipMessageService', 
 
       hideErrorMessage: function ($element, $formGroupElement) {
         validationService.removeErrorClass($formGroupElement);
-        getErrorTooltip($element).removeClass('in');
+        var tip = getErrorTooltip($element);
+        tip.removeClass('in');
+        tip.addClass('hidden');
       },
 
       showErrorMessage: function ($element, $attr, ngModelController) {
@@ -73,6 +75,7 @@ angular.module('bootstrap.angular.validation').factory('tooltipMessageService', 
         var appendToBody = validationConfig.tooltipAppendToBody;
 
         $errorTooltip.find('.tooltip-inner').html(message);
+        $errorTooltip.removeClass('hidden');
 
         var $position = $injector.get('$uibPosition');
         var ttPosition = $position.positionElements($element, $errorTooltip, placement, appendToBody);
